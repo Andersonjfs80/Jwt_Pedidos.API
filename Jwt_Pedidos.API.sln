@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "Domain\Domain.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{ED2AD7FE-A582-4B8F-8833-1D0F38563AFA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jwt_Pedidos_v1.API", "Jwt_Pedidos_v1.API\Jwt_Pedidos_v1.API.csproj", "{2BEEE571-B567-42FB-BEB5-BFADF22919C8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jwt_Pedidos_v1.API", "Jwt_Pedidos_v1.API\Jwt_Pedidos_v1.API.csproj", "{2BEEE571-B567-42FB-BEB5-BFADF22919C8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JWT_Pedidos_Test", "JWT_Pedidos_Test\JWT_Pedidos_Test.csproj", "{4C53498D-985C-43AC-AB85-29A84E79680C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{2BEEE571-B567-42FB-BEB5-BFADF22919C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2BEEE571-B567-42FB-BEB5-BFADF22919C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2BEEE571-B567-42FB-BEB5-BFADF22919C8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C53498D-985C-43AC-AB85-29A84E79680C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C53498D-985C-43AC-AB85-29A84E79680C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C53498D-985C-43AC-AB85-29A84E79680C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C53498D-985C-43AC-AB85-29A84E79680C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
