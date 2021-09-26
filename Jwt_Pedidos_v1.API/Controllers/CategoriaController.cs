@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Jwt_Pedidos_v1.API.Controllers
@@ -21,32 +22,36 @@ namespace Jwt_Pedidos_v1.API.Controllers
         }
 
         [HttpGet]
-        [Authorize]
+        //[Authorize]
         //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public ActionResult<IEnumerable<Categoria>> GetAll()
         {
             var categorias = _categoriaService.GetAllAsync();
+            
+            return Ok(JsonSerializer.Serialize(categorias, GetConfigurationJsonSerializerOptions()));
+        }
 
-            if (categorias == null)
-                return NotFound();
-
-            return Ok(categorias); 
+        private static JsonSerializerOptions GetConfigurationJsonSerializerOptions()
+        {
+            return new JsonSerializerOptions()
+            {
+                MaxDepth = 0,
+                IgnoreNullValues = true,
+                IgnoreReadOnlyProperties = true
+            };
         }
 
         [HttpGet("{id}")]
-        [Authorize]
+        //[Authorize]
         public ActionResult<Categoria> Get(int id)
         {
             var categoria = _categoriaService.GetByIdAsync(c => c.CategoriaId == id);
-
-            if (categoria == null)
-                return NotFound();
-
-            return Ok(categoria); 
+                    
+            return Ok(JsonSerializer.Serialize(categoria, GetConfigurationJsonSerializerOptions()));
         }
 
         [HttpPost]
-        [Authorize]
+        //[Authorize]
         public IActionResult Create(Categoria categoria)
         {            
             if (_categoriaService.AddAsync(categoria).Result == false)
@@ -56,7 +61,7 @@ namespace Jwt_Pedidos_v1.API.Controllers
         }
 
         [HttpPut("{id}")]
-        [Authorize]
+        //[Authorize]
         public IActionResult Update(int id, Categoria categoria)
         {
             if (id != categoria.CategoriaId)
@@ -73,7 +78,7 @@ namespace Jwt_Pedidos_v1.API.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize]
+        //[Authorize]
         public IActionResult Delete(int id)
         {
             var existingCategoria = _categoriaService.GetByIdAsync(c => c.CategoriaId == id).Result;

@@ -1,4 +1,5 @@
 ﻿using Domain.Entidades;
+using Infrastructure.DBConfiguration.EFCore;
 using Infrastructure.Interfaces.Domain;
 using Infrastructure.Repositories.Standard.EFCore;
 using System;
@@ -12,6 +13,7 @@ namespace Infrastructure.Repositories.Domain
 {
     public class CategoriaItemRepository : Repository<CategoriaItem>, ICategoriaItemRepository
     {
+        public CategoriaItemRepository(ApplicationContext context) : base(context) { }
         public Task<IEnumerable<CategoriaItem>> GetAllIncludingAsync(    
             Expression<Func<CategoriaItem, bool>> filter = null,    
             Func<IQueryable<CategoriaItem>, IOrderedQueryable<CategoriaItem>> orderBy = null,    

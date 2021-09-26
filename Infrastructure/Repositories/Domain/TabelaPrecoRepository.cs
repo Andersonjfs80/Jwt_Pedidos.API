@@ -1,4 +1,5 @@
 ﻿using Domain.Entidades;
+using Infrastructure.DBConfiguration.EFCore;
 using Infrastructure.Interfaces.Domain;
 using Infrastructure.Repositories.Standard.EFCore;
 using System;
@@ -10,5 +11,8 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Repositories.Domain
 {
-    public class TabelaPrecoRepository : Repository<TabelaPreco>, ITabelaPrecoRepository { }
+    public class TabelaPrecoRepository : Repository<TabelaPreco>, ITabelaPrecoRepository 
+    {
+        public TabelaPrecoRepository(ApplicationContext context) : base(context) { }
+    }
 }

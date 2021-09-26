@@ -12,6 +12,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Jwt_Pedidos_v1.API.Middlewares;
+using Newtonsoft.Json;
+using Microsoft.AspNetCore.Mvc.Formatters;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Jwt_Pedidos_v1.API
 {
@@ -27,6 +31,10 @@ namespace Jwt_Pedidos_v1.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddControllersWithViews()
+                                  .AddJsonOptions(o => o.JsonSerializerOptions
+                                  .ReferenceHandler = ReferenceHandler.Preserve);
+
             services.AddCors();
             services.AddControllers();
             //Custom
