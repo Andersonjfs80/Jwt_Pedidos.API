@@ -46,7 +46,10 @@ namespace Jwt_Pedidos_v1.API.Controllers
         public ActionResult<Categoria> Get(int id)
         {
             var categoria = _categoriaService.GetByIdAsync(c => c.CategoriaId == id);
-                    
+
+            if (categoria is null)
+                return NotFound();
+
             return Ok(JsonSerializer.Serialize(categoria, GetConfigurationJsonSerializerOptions()));
         }
 
@@ -64,14 +67,13 @@ namespace Jwt_Pedidos_v1.API.Controllers
         //[Authorize]
         public IActionResult Update(int id, Categoria categoria)
         {
-            if (id != categoria.CategoriaId)
-                return BadRequest();
-
-            var existingCategoria = _categoriaService.GetByIdAsync(c => c.CategoriaId == id).Result;
-            if (existingCategoria is null)
+            if (categoria is null)
                 return NotFound();
 
-            if (_categoriaService.Update(existingCategoria).Result == false)
+            if (id != categoria.CategoriaId)
+                return NotFound();
+
+            if (_categoriaService.Update(categoria).Result == false)
                 return NotFound();
 
             return NoContent();
