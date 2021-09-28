@@ -83,7 +83,7 @@ namespace JWT_Pedidos_Test
             {
                 _categoria.Nome = "Legumes";
                 // Act
-                var okResult = _controller.Update(_categoria.CategoriaId, _categoria);
+                var okResult = _controller.Update(_categoria);
                 // Assert
                 Assert.IsInstanceOf<NoContentResult>(okResult);
             }

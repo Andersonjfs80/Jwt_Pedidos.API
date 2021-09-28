@@ -60,17 +60,18 @@ namespace Jwt_Pedidos_v1.API.Controllers
             if (_categoriaService.AddAsync(categoria).Result == false)
                 return NotFound();
 
-            return CreatedAtAction(nameof(Create), new { id = categoria.CategoriaId }, categoria);
+            return CreatedAtAction(nameof(Create), categoria);
         }
-
-        [HttpPut("{id}")]
+ 
+        [HttpPut]
+        //[HttpPut("{id}")]
         //[Authorize]
-        public IActionResult Update(int id, Categoria categoria)
+        public IActionResult Update(Categoria categoria)
         {
             if (categoria is null)
                 return NotFound();
 
-            if (id != categoria.CategoriaId)
+            if (categoria.CategoriaId <= 0)
                 return NotFound();
 
             if (_categoriaService.Update(categoria).Result == false)
