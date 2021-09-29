@@ -43,8 +43,8 @@ namespace Jwt_Pedidos_v1.API.Controllers
             var audience = _config["JwtTokenConfiguration:Audience"];
             var expireSeconds = Convert.ToDouble(_config["JwtTokenConfiguration:ExpirationInSeconds"]);
             var expiry = DateTime.Now.AddMinutes(expireSeconds);
-            var securityKey = new SymmetricSecurityKey(
-                  Encoding.UTF8.GetBytes(_config["JwtTokenConfiguration:Key"]));
+            var key = _config["JwtTokenConfiguration:Key"];
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
             var token = new JwtSecurityToken(
