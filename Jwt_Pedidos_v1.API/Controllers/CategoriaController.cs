@@ -1,5 +1,6 @@
 ﻿using Application.Interfaces.Domain;
 using Domain.Entidades;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -21,9 +22,8 @@ namespace Jwt_Pedidos_v1.API.Controllers
             _categoriaService = categoriaService;
         }
 
-        [HttpGet]
-        //[Authorize]
-        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpGet]        
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public ActionResult<IEnumerable<Categoria>> GetAll()
         {
             var categorias = _categoriaService.GetAllAsync();
@@ -42,10 +42,10 @@ namespace Jwt_Pedidos_v1.API.Controllers
         }
 
         [HttpGet("{id}")]
-        //[Authorize]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public ActionResult<Categoria> Get(int id)
         {
-            var categoria = _categoriaService.GetByIdAsync(c => c.CategoriaId == id);
+            var categoria = _categoriaService.GetByIdAsync(c => c.CategoriaId == id).Result;
 
             if (categoria is null)
                 return NotFound();
@@ -54,7 +54,7 @@ namespace Jwt_Pedidos_v1.API.Controllers
         }
 
         [HttpPost]
-        //[Authorize]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public IActionResult Create(Categoria categoria)
         {            
             if (_categoriaService.AddAsync(categoria).Result == false)
@@ -64,8 +64,7 @@ namespace Jwt_Pedidos_v1.API.Controllers
         }
  
         [HttpPut]
-        //[HttpPut("{id}")]
-        //[Authorize]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public IActionResult Update(Categoria categoria)
         {
             if (categoria is null)
@@ -81,7 +80,7 @@ namespace Jwt_Pedidos_v1.API.Controllers
         }
 
         [HttpDelete("{id}")]
-        //[Authorize]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public IActionResult Delete(int id)
         {
             var existingCategoria = _categoriaService.GetByIdAsync(c => c.CategoriaId == id).Result;

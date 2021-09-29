@@ -1,4 +1,5 @@
 ﻿using Domain.Entidades;
+using Jwt_Pedidos_v1.API.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -16,14 +17,14 @@ namespace Jwt_Pedidos_v1.API.Controllers
     [ApiController]
     public class AuthenticationController : ControllerBase
     {
-        private IConfiguration _config;
-        public AuthenticationController(IConfiguration Configuration)
+        private JwtTokenConfiguration _tokenConfiguration;
+        public AuthenticationController(JwtTokenConfiguration tokenConfiguration)
         {
-            _config = Configuration;
+            _tokenConfiguration = tokenConfiguration;
         }
 
         [HttpPost]
-        public IActionResult Login(Usuario usuario)
+        public IActionResult Login(UsuarioDTO usuario)
         {
             bool resultado = ValidateUser(usuario);
             if (resultado)
@@ -39,12 +40,11 @@ namespace Jwt_Pedidos_v1.API.Controllers
 
         private string CreateTokenJWT()
         {
-            var issuer = _config["JwtTokenConfiguration:Issuer"];
-            var audience = _config["JwtTokenConfiguration:Audience"];
-            var expireSeconds = Convert.ToDouble(_config["JwtTokenConfiguration:ExpirationInSeconds"]);
+            var issuer = _tokenConfiguration.Issuer;
+            var audience = _tokenConfiguration.Audience;
+            var expireSeconds = _tokenConfiguration.ExpirationInSeconds;
             var expiry = DateTime.Now.AddMinutes(expireSeconds);
-            var key = _config["JwtTokenConfiguration:Key"];
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_tokenConfiguration.Key));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
             var token = new JwtSecurityToken(
@@ -58,7 +58,7 @@ namespace Jwt_Pedidos_v1.API.Controllers
             return stringToken;
         }
 
-        private bool ValidateUser(Usuario usuario)
+        private bool ValidateUser(UsuarioDTO usuario)
         {
             if (usuario.Nome == "Anderson" && usuario.Senha == "NS123456")
             {

@@ -12,7 +12,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Jwt_Pedidos_v1.API.Middlewares;
-using Newtonsoft.Json;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -68,12 +67,6 @@ namespace Jwt_Pedidos_v1.API
                 .AllowAnyHeader());
             app.UseAuthentication();
             app.UseAuthorization();
-
-            //A ordem é importante dessa forma não funciona
-            //Na tag do controller [Autorize] tem identificar o [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-            //controlador ignora auth cookie e se concentra apenas em jwt
-            //app.UseAuthorization(); 
-            //app.UseAuthentication();  
 
             app.UseEndpoints(endpoints =>
             {

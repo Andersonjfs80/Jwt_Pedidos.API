@@ -42,8 +42,8 @@ namespace JWT_Pedidos_Test
         }
 
         [Test, Order(2)]
-        [TestCase(0)]
-        [TestCase(1)]
+        [TestCase(10)]
+        [TestCase(12)]
         public void GetById(int id)
         {
             try
@@ -59,7 +59,7 @@ namespace JWT_Pedidos_Test
             }
         }
 
-        [Test, Order(3)]        
+        [Test, Order(3)]
         public void Create()
         {
             try
@@ -102,7 +102,7 @@ namespace JWT_Pedidos_Test
                 // Act
                 var okResult = _controller.Delete(_deletingCategoria.CategoriaId);
                 // Assert
-                Assert.IsInstanceOf<NoContentResult>(okResult);                
+                Assert.IsInstanceOf<NoContentResult>(okResult);
             }
             catch (Exception)
             {
@@ -112,7 +112,7 @@ namespace JWT_Pedidos_Test
 
         [Test, Order(6)]
         public void DeleteNotFoundResult()
-        {           
+        {
             // Act
             var okResult = _controller.Delete(0);
             // Assert
