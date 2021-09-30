@@ -20,8 +20,6 @@ namespace JWT_Pedidos_Test
         ICategoriaRepository _categoriaRepository;
         ICategoriaService _categoriaService;
         private ApplicationContext _applicationContext;
-        Categoria _categoria = null;
-
 
         [SetUp]
         public void Setup()
@@ -42,13 +40,13 @@ namespace JWT_Pedidos_Test
         }
 
         [Test, Order(2)]
-        [TestCase(10)]
-        [TestCase(12)]
-        public void GetById(int id)
+//        [TestCase(10)]
+        public void GetById()
         {
             try
             {
                 // Act
+                var id = _categoriaService.GetAllAsync().Result.LastOrDefault().CategoriaId;
                 var okResult = _controller.Get(id);
                 // Assert
                 Assert.IsInstanceOf<OkObjectResult>(okResult.Result);
@@ -64,9 +62,9 @@ namespace JWT_Pedidos_Test
         {
             try
             {
-                _categoria = new Categoria() { Nome = "Bebidas", Status = true };
+                var categoria = new Categoria() { Nome = "Bebidas", Status = true };
                 // Act
-                var okResult = _controller.Create(_categoria);
+                var okResult = _controller.Create(categoria);
                 // Assert
                 Assert.IsInstanceOf<CreatedAtActionResult>(okResult);
             }
@@ -81,9 +79,11 @@ namespace JWT_Pedidos_Test
         {
             try
             {
-                _categoria.Nome = "Legumes";
+                var _updatingCategoria = _categoriaService.GetAllAsync().Result.LastOrDefault();
+
+                _updatingCategoria.Nome = string.Concat(_updatingCategoria.Nome, " Teste");
                 // Act
-                var okResult = _controller.Update(_categoria);
+                var okResult = _controller.Update(_updatingCategoria.CategoriaId, _updatingCategoria);
                 // Assert
                 Assert.IsInstanceOf<NoContentResult>(okResult);
             }
@@ -97,8 +97,8 @@ namespace JWT_Pedidos_Test
         public void DeleteContetnResult()
         {
             try
-            {
-                var _deletingCategoria = _categoriaService.GetAllAsync().Result.LastOrDefault();
+            {                
+                var _deletingCategoria = _categoriaService.GetByIdAsync(c => c.Nome.Contains("Bebidas")).Result;
                 // Act
                 var okResult = _controller.Delete(_deletingCategoria.CategoriaId);
                 // Assert

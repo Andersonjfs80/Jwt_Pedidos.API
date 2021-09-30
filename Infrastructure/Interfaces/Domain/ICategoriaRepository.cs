@@ -9,5 +9,5 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Interfaces.Domain
 {
-    public interface ICategoriaRepository : IRepository<Categoria> {}
+    public interface ICategoriaRepository : IRepository<Categoria> { }
 }

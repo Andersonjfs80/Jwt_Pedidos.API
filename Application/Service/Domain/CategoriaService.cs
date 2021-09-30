@@ -13,6 +13,7 @@ namespace Application.Service.Domain
 {
     public class CategoriaService : Service<Categoria>, ICategoriaService
     {
-        public CategoriaService(ICategoriaRepository repository) : base(repository) {}
+        private readonly new ICategoriaRepository _repository;
+        public CategoriaService(ICategoriaRepository repository) : base(repository) { }
     }
 }

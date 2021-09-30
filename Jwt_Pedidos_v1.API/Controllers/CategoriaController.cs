@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -49,28 +50,31 @@ namespace Jwt_Pedidos_v1.API.Controllers
 
             if (categoria is null)
                 return NotFound();
-
+            
             return Ok(JsonSerializer.Serialize(categoria, GetConfigurationJsonSerializerOptions()));
         }
 
         [HttpPost]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public IActionResult Create(Categoria categoria)
-        {            
+        {
             if (_categoriaService.AddAsync(categoria).Result == false)
                 return NotFound();
 
             return CreatedAtAction(nameof(Create), categoria);
         }
  
-        [HttpPut]
+        [HttpPut("{id}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public IActionResult Update(Categoria categoria)
+        public IActionResult Update(int id, Categoria categoria)
         {
+            if (id <= 0)
+                return NotFound();
+
             if (categoria is null)
                 return NotFound();
 
-            if (categoria.CategoriaId <= 0)
+            if (categoria.CategoriaId != id)
                 return NotFound();
 
             if (_categoriaService.Update(categoria).Result == false)
