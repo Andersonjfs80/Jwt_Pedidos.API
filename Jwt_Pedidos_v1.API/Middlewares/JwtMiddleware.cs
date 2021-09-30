@@ -47,8 +47,9 @@ namespace Jwt_Pedidos_v1.API.Middlewares
                     ValidIssuer = configuration["JwtTokenConfiguration:Issuer"],
                     ValidAudience = configuration["JwtTokenConfiguration:Audience"],
                     IssuerSigningKey = new SymmetricSecurityKey(
-                        Encoding.UTF8.GetBytes(configuration["JwtTokenConfiguration:Key"]))
-                };               
+                        Encoding.UTF8.GetBytes(configuration["JwtTokenConfiguration:Key"])),
+                    ClockSkew = TimeSpan.Zero
+            };               
             });
         }
 

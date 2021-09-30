@@ -50,7 +50,7 @@ namespace Jwt_Pedidos_v1.API.Controllers
             var token = new JwtSecurityToken(
                 issuer: issuer,
                 audience: audience,
-                expires: expiry,
+                expires: expiry,                
                 signingCredentials: credentials);
 
             var tokenHandler = new JwtSecurityTokenHandler();
