@@ -29,17 +29,12 @@ namespace Jwt_Pedidos_v1.API.Controllers
         {
             var categorias = _categoriaService.GetAllAsync();
             
-            return Ok(JsonSerializer.Serialize(categorias, GetConfigurationJsonSerializerOptions()));
-        }
-
-        private static JsonSerializerOptions GetConfigurationJsonSerializerOptions()
-        {
-            return new JsonSerializerOptions()
+            return Ok(JsonSerializer.Serialize(categorias, new JsonSerializerOptions()
             {
                 MaxDepth = 0,
                 IgnoreNullValues = true,
                 IgnoreReadOnlyProperties = true
-            };
+            }));
         }
 
         [HttpGet("{id}")]
@@ -51,7 +46,12 @@ namespace Jwt_Pedidos_v1.API.Controllers
             if (categoria is null)
                 return NotFound();
             
-            return Ok(JsonSerializer.Serialize(categoria, GetConfigurationJsonSerializerOptions()));
+            return Ok(JsonSerializer.Serialize(categoria, new JsonSerializerOptions()
+            {
+                MaxDepth = 0,
+                IgnoreNullValues = true,
+                IgnoreReadOnlyProperties = true
+            }));
         }
 
         [HttpPost]

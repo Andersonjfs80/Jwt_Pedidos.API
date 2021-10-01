@@ -52,7 +52,7 @@ namespace Infrastructure.Repositories.Standard.EFCore
 
         public async Task<TEntity> GetByIdAsync(Expression<Func<TEntity, bool>> filter)
         {
-            return await dbSet.Where(filter).SingleOrDefaultAsync();
+            return await dbSet.Where(filter).FirstOrDefaultAsync();
         }
 
         public async Task<int> SaveAsync()
