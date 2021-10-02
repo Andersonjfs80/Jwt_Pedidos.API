@@ -10,6 +10,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Jwt_Pedidos_v1.API.Services;
 
 namespace Jwt_Pedidos_v1.API.Controllers
 {
@@ -29,33 +30,13 @@ namespace Jwt_Pedidos_v1.API.Controllers
             bool resultado = ValidateUser(usuario);
             if (resultado)
             {
-                var tokenString = CreateTokenJWT();
+                var tokenString = TokenService.CreateTokenJWT(_tokenConfiguration);
                 return Ok(new { token = tokenString });
             }
             else
             {
                 return Unauthorized();
             }
-        }
-
-        private string CreateTokenJWT()
-        {
-            var issuer = _tokenConfiguration.Issuer;
-            var audience = _tokenConfiguration.Audience;
-            var expireSeconds = _tokenConfiguration.ExpirationInSeconds;
-            var expiry = DateTime.Now.AddMinutes(expireSeconds);
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_tokenConfiguration.Key));
-            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-
-            var token = new JwtSecurityToken(
-                issuer: issuer,
-                audience: audience,
-                expires: expiry,                
-                signingCredentials: credentials);
-
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var stringToken = tokenHandler.WriteToken(token);
-            return stringToken;
         }
 
         private bool ValidateUser(UsuarioDTO usuario)
