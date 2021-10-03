@@ -25,8 +25,7 @@ namespace Jwt_Pedidos_v1.API.Controllers
         }
 
         // GET: api/<CategoriaItemController>
-        [HttpGet]
-        [Consumes("application/json")]
+        [HttpGet]        
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [ProducesResponseType(StatusCodes.Status200OK)]        
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]        
@@ -34,12 +33,16 @@ namespace Jwt_Pedidos_v1.API.Controllers
         {
             var categoriaItens = _categoriaItemService.GetAllAsync();
 
-            return Ok(new { Consumes = "application/json", Values = categoriaItens });
+            return Ok(JsonSerializer.Serialize(categoriaItens, new JsonSerializerOptions()
+            {
+                MaxDepth = 0,
+                IgnoreNullValues = true,
+                IgnoreReadOnlyProperties = true
+            }));
         }
 
         // GET api/<CategoriaItemController>/5
-        [HttpGet("{id}")]
-        [Consumes("application/json")]
+        [HttpGet("{id}")]        
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -51,7 +54,12 @@ namespace Jwt_Pedidos_v1.API.Controllers
             if (categoriaItem is null)
                 return NotFound();
 
-            return Ok(new { Consumes = "application/json", Values = categoriaItem });
+            return Ok(JsonSerializer.Serialize(categoriaItem, new JsonSerializerOptions()
+            {
+                MaxDepth = 0,
+                IgnoreNullValues = true,
+                IgnoreReadOnlyProperties = true
+            }));
         }
 
         // POST api/<CategoriaItemController>
