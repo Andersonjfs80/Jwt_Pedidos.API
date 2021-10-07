@@ -31,12 +31,12 @@ namespace Jwt_Pedidos_v1.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews()
-                                  .AddJsonOptions(o => o.JsonSerializerOptions
-                                  .ReferenceHandler = ReferenceHandler.Preserve)
+                                  //.AddJsonOptions(o => o.JsonSerializerOptions
+                                  //.ReferenceHandler = ReferenceHandler.Preserve)
                                   .ConfigureApiBehaviorOptions(options =>
                                   {
                                       options.SuppressMapClientErrors = true;
-                                  }); ;
+                                  });
 
             services.AddCors();
             services.AddControllers();

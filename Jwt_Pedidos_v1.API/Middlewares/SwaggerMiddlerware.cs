@@ -25,7 +25,6 @@ namespace Jwt_Pedidos_v1.API.Middlewares
                     Type = SecuritySchemeType.Http,
                     BearerFormat = "JWT"
                 });
-
                 opt.AddSecurityRequirement(new OpenApiSecurityRequirement
                 {
                     {
