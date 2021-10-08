@@ -13,21 +13,21 @@ namespace Jwt_Pedidos_v1.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProdutoController : ControllerBase
+    public class ProdutoCategoriaController : ControllerBase
     {
-        private readonly IProdutoService _produtoService;
-        public ProdutoController(IProdutoService produtoService)
+        private readonly IProdutoCategoriaService _produtoCategoriaService;
+        public ProdutoCategoriaController(IProdutoCategoriaService produtoCategoriaService)
         {
-            _produtoService = produtoService;
+            _produtoCategoriaService = produtoCategoriaService;            
         }
 
         [HttpGet]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public ActionResult<IEnumerable<Produto>> GetAll()
+        public ActionResult<IEnumerable<ProdutoCategoria>> GetAll()
         {
-            var produtos = _produtoService.GetAllAsync();
+            var produtosCategorias = _produtoCategoriaService.GetAllAsync();
 
-            return Ok(JsonSerializer.Serialize(produtos, new JsonSerializerOptions()
+            return Ok(JsonSerializer.Serialize(produtosCategorias, new JsonSerializerOptions()
             {
                 MaxDepth = 0,
                 IgnoreNullValues = true,
@@ -37,14 +37,14 @@ namespace Jwt_Pedidos_v1.API.Controllers
 
         [HttpGet("{id}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public ActionResult<Produto> Get(int id)
+        public ActionResult<ProdutoCategoria> Get(int id)
         {
-            var produto = _produtoService.GetByIdAsync(p => p.ProdutoId == id).Result;
+            var produtoCategoria = _produtoCategoriaService.GetByIdAsync(pc => pc.ProdutoCategoriaId == id).Result;
 
-            if (produto is null)
+            if (produtoCategoria is null)
                 return NotFound();
 
-            return Ok(JsonSerializer.Serialize(produto, new JsonSerializerOptions()
+            return Ok(JsonSerializer.Serialize(produtoCategoria, new JsonSerializerOptions()
             {
                 MaxDepth = 0,
                 IgnoreNullValues = true,
@@ -54,28 +54,28 @@ namespace Jwt_Pedidos_v1.API.Controllers
 
         [HttpPost]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public IActionResult Create(Produto produto)
+        public IActionResult Create(ProdutoCategoria produtoCategoria)
         {
-            if (_produtoService.AddAsync(produto).Result == false)
+            if (_produtoCategoriaService.AddAsync(produtoCategoria).Result == false)
                 return NotFound();
 
-            return CreatedAtAction(nameof(Create), produto);
+            return CreatedAtAction(nameof(Create), produtoCategoria);
         }
 
         [HttpPut("{id}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public IActionResult Update(int id, Produto produto)
+        public IActionResult Update(int id, ProdutoCategoria produtoCategoria)
         {
             if (id <= 0)
                 return NotFound();
 
-            if (produto is null)
+            if (produtoCategoria is null)
                 return NotFound();
 
-            if (produto.ProdutoId != id)
+            if (produtoCategoria.ProdutoCategoriaId != id)
                 return NotFound();
 
-            if (_produtoService.Update(produto).Result == false)
+            if (_produtoCategoriaService.Update(produtoCategoria).Result == false)
                 return NotFound();
 
             return NoContent();
@@ -85,12 +85,12 @@ namespace Jwt_Pedidos_v1.API.Controllers
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public IActionResult Delete(int id)
         {
-            var existingProduto = _produtoService.GetByIdAsync(p => p.ProdutoId == id).Result;
+            var existingProdutoCategoria = _produtoCategoriaService.GetByIdAsync(pc => pc.ProdutoCategoriaId == id).Result;
 
-            if (existingProduto is null)
+            if (existingProdutoCategoria is null)
                 return NotFound();
 
-            if (_produtoService.Delete(existingProduto).Result == false)
+            if (_produtoCategoriaService.Delete(existingProdutoCategoria).Result == false)
                 return NotFound();
 
             return NoContent();
