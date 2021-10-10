@@ -15,34 +15,46 @@ using System.Threading.Tasks;
 
 namespace JWT_Pedidos_Test
 {
-    public class ProdutoCategoriaController_Tests
+    public class ProdutoPrecoController_Tests
     {
-        ProdutoCategoriaController _controller;
-        IProdutoCategoriaRepository _produtoCategoriaRepository;
-        IProdutoCategoriaService _produtoCategoriaService;
+        ProdutoPrecoController _controller;
+        IProdutoPrecoRepository _produtoPrecoRepository;
+        IProdutoPrecoService _produtoPrecoService;
         private ApplicationContext _applicationContext;
         private Produto _produtoTeste;
-        private int _IdCategoria;
-        private int _IdCategoriaItem;
+        private int _IdUnidade;
+        private int _IdTabela;
 
         [SetUp]
         public void Setup()
         {
             _applicationContext = new ApplicationContext();
-            _produtoCategoriaRepository = new ProdutoCategoriaRepository(_applicationContext);
-            _produtoCategoriaService = new ProdutoCategoriaService(_produtoCategoriaRepository);
-            _controller = new ProdutoCategoriaController(_produtoCategoriaService);
+            _produtoPrecoRepository = new ProdutoPrecoRepository(_applicationContext);
+            _produtoPrecoService = new ProdutoPrecoService(_produtoPrecoRepository);
+            _controller = new ProdutoPrecoController(_produtoPrecoService);
 
             
             var produtoService = new ProdutoService(new ProdutoRepository(_applicationContext));
             _produtoTeste = new Produto() { Nome = "Coca cola 1Lt teste", NomeReduzido = "Coca cola 1Lt teste", Status = true };
             var booResult = produtoService.AddAsync(_produtoTeste).Result;
 
-            var categoriaService = new CategoriaService(new CategoriaRepository(_applicationContext));
-            _IdCategoria = (int)categoriaService.GetAllAsync().Result?.LastOrDefault().CategoriaId;
+            var unidadeService = new UnidadeService(new UnidadeRepository(_applicationContext));
+            _IdUnidade = (int)unidadeService.GetAllAsync().Result?.LastOrDefault().UnidadeId;
+            if (_IdUnidade == 0)
+            {
+                Unidade newUnidade = new Unidade() { Nome = "Unidade", NomeReduzido = "UN", Status = true };
+                var booResultado = unidadeService.AddAsync(newUnidade);
+                _IdUnidade = newUnidade.UnidadeId;
+            }
 
-            var categoriaItemService = new CategoriaItemService(new CategoriaItemRepository(_applicationContext));
-            _IdCategoriaItem = (int)categoriaItemService.GetAllIncludingAsync(ci => ci.CategoriaItemId == _IdCategoria).Result?.LastOrDefault().CategoriaItemId;
+            var tabelaPrecoService = new TabelaPrecoService(new TabelaPrecoRepository(_applicationContext));
+            _IdTabela = (int)tabelaPrecoService.GetAllAsync().Result?.LastOrDefault().TabelaPrecoId;
+            if (_IdTabela == 0)
+            {
+                TabelaPreco newTabelaPreco = new TabelaPreco() { Nome = "Tabela padrão", Status = true };
+                var booResultado = tabelaPrecoService.AddAsync(newTabelaPreco);
+                _IdTabela = newTabelaPreco.TabelaPrecoId;
+            }
         }
 
         [Test, Order(1)]
@@ -61,7 +73,7 @@ namespace JWT_Pedidos_Test
             try
             {
                 // Act
-                var id = _produtoCategoriaService.GetAllAsync().Result.LastOrDefault().ProdutoCategoriaId;
+                var id = _produtoPrecoService.GetAllAsync().Result.LastOrDefault().ProdutoPrecoId;
                 var okResult = _controller.Get(id);
                 // Assert
                 Assert.IsInstanceOf<OkObjectResult>(okResult.Result);
@@ -76,10 +88,10 @@ namespace JWT_Pedidos_Test
         public void Create()
         {
             try
-            {
-                var produtoCategoria = new ProdutoCategoria() { ProdutoId = _produtoTeste.ProdutoId, CategoriaId = _IdCategoria, CategoriaItemId = _IdCategoria, Status = true };
+            {                
+                var produtoPreco = new ProdutoPreco() { PrecoCusto = 0.50, PrecoVenda = 1.00, TabelaPrecoId = _IdTabela, UnidadeId = _IdUnidade, Status = true };
                 // Act
-                var okResult = _controller.Create(produtoCategoria);
+                var okResult = _controller.Create(produtoPreco);
                 // Assert
                 Assert.IsInstanceOf<CreatedAtActionResult>(okResult);
             }
@@ -94,11 +106,12 @@ namespace JWT_Pedidos_Test
         {
             try
             {
-                var _updatingProdutoCategoria = _produtoCategoriaService.GetAllAsync().Result.LastOrDefault();
+                var _updatingProdutoPreco = _produtoPrecoService.GetAllAsync().Result.LastOrDefault();
+                _updatingProdutoPreco.PrecoCusto = 0.51;
+                _updatingProdutoPreco.PrecoVenda = 1.01;
 
-                _updatingProdutoCategoria.CategoriaItemId = 0;
                 // Act
-                var okResult = _controller.Update(_updatingProdutoCategoria.ProdutoCategoriaId, _updatingProdutoCategoria);
+                var okResult = _controller.Update(_updatingProdutoPreco.ProdutoPrecoId, _updatingProdutoPreco);
                 // Assert
                 Assert.IsInstanceOf<NoContentResult>(okResult);
             }
@@ -113,9 +126,9 @@ namespace JWT_Pedidos_Test
         {
             try
             {
-                var _deletingProdutoCategoria = _produtoCategoriaService.GetAllAsync().Result.LastOrDefault();
+                var _deletingProdutoPreco = _produtoPrecoService.GetAllAsync().Result.LastOrDefault();
                 // Act
-                var okResult = _controller.Delete(_deletingProdutoCategoria.ProdutoCategoriaId);
+                var okResult = _controller.Delete(_deletingProdutoPreco.ProdutoPrecoId);
                 // Assert
                 Assert.IsInstanceOf<NoContentResult>(okResult);
             }

@@ -18,18 +18,18 @@ namespace Domain.Entidades
         [Required(ErrorMessage = "Informe o preço de custo.")]
         [Display(Name = "Preço de custo")]
         [Column(Order = 1)]
-        public decimal PrecoCusto { get; set; }
+        public double PrecoCusto { get; set; }
 
         [Required(ErrorMessage = "Informe o preço de custo.")]
         [Display(Name = "Preço de venda")]
         [Column(Order = 2)]
-        public decimal PrecoVenda { get; set; }
+        public double PrecoVenda { get; set; }
 
         [Required(ErrorMessage = "Informe a quantidade.")]
         [Display(Name = "Quantidade")]
         [Column(Order = 3)]
         [Range(1, 9999999999999999.99)]
-        public decimal Quantidade { get; set; }
+        public double Quantidade { get; set; }
 
         [Required(ErrorMessage = "Informe o status.")]
         [Display(Name = "Status")]

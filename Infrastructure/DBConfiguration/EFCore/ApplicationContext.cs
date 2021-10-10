@@ -21,7 +21,7 @@ namespace Infrastructure.DBConfiguration.EFCore
         /* Creating DatabaseContext configured outside with Dependency Injection */
         public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options)
         {
-            Database.Migrate();           
+            Database.Migrate();
             //Cria a base de dados e suas respectivas tabelas se não existir.
             //Database.EnsureCreated();
             //Exclui a base de dados se existir.
@@ -37,6 +37,8 @@ namespace Infrastructure.DBConfiguration.EFCore
             //Update-Database LastGoodMigration
             //Script-Migration 20190725054716_Add_new_tables
             //Add-Migration NewCampoPessoaConvenio
+
+            //dotnet ef migrations add 20190725054716_Add_new_tables
         }
 
         public DbSet<Categoria> Categorias { get; set; }

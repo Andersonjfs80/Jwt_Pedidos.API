@@ -9,7 +9,7 @@ namespace Infrastructure.DBConfiguration.EFCore
     public static class DbInitializer
     {
         public static void Initialize(ApplicationContext context)
-        {
+        {            
             context.Database.EnsureCreated();       
         }
     }
