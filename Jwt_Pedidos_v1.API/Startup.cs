@@ -15,6 +15,7 @@ using Jwt_Pedidos_v1.API.Middlewares;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Http;
 
 namespace Jwt_Pedidos_v1.API
 {
@@ -75,6 +76,11 @@ namespace Jwt_Pedidos_v1.API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+
+                //endpoints.MapGet("/", async context =>
+                //{
+                //    await context.Response.WriteAsync("Hello World!");
+                //});
             });
         }
     }

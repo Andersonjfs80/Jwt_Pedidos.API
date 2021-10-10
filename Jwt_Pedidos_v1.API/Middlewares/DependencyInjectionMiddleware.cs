@@ -31,6 +31,12 @@ namespace Jwt_Pedidos_v1.API.Middlewares
             services.AddTransient<IProdutoService, ProdutoService>();
             services.AddTransient<IProdutoCategoriaRepository, ProdutoCategoriaRepository>();
             services.AddTransient<IProdutoCategoriaService, ProdutoCategoriaService>();
+            services.AddTransient<IProdutoPrecoRepository, ProdutoPrecoRepository>();
+            services.AddTransient<IProdutoPrecoService, ProdutoPrecoService>();
+            services.AddTransient<IUnidadeRepository, UnidadeRepository>();
+            services.AddTransient<IUnidadeService, UnidadeService>();
+            services.AddTransient<ITabelaPrecoRepository, TabelaPrecoRepository>();
+            services.AddTransient<ITabelaPrecoService, TabelaPrecoService>();
         }
     }
 }
