@@ -22,6 +22,7 @@ namespace Domain.Entidades
         public string Nome { get; set; }
 
         [Required(ErrorMessage = "Informe uma senha.", AllowEmptyStrings = false)]
+        [DataType(DataType.Password)]
         [StringLength(100, MinimumLength = 8)]
         [Display(Name = "Senha")]
         [Column(Order = 1)]
@@ -29,6 +30,7 @@ namespace Domain.Entidades
 
         //[Required(ErrorMessage = "Informe uma chave secreta.", AllowEmptyStrings = false)]
         [StringLength(100, MinimumLength = 8)]
+        //[DataType(DataType.Password)]
         [Display(Name = "Chave secreta")]
         [Column(Order = 2)]
         public string SecretKey { get; set; }

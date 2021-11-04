@@ -49,6 +49,8 @@ namespace Infrastructure.DBConfiguration.EFCore
         public DbSet<TabelaPreco> TabelaPrecos { get; set; }
         public DbSet<Unidade> Unidades { get; set; }
         public DbSet<Usuario> Usuarios { get; set; }
+        public DbSet<Pedido> Pedidos { get; set; }
+        public DbSet<PedidoItem> PedidoItens { get; set; }
 
     }
 }

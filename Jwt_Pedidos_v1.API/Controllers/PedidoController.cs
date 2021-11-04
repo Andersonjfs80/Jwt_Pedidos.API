@@ -3,31 +3,29 @@ using Domain.Entidades;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
-using System.Net.Mime;
+using System.Linq;
 using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace Jwt_Pedidos_v1.API.Controllers
 {
-    [Route("api/[controller]")]
-    [Produces(MediaTypeNames.Application.Json)]
-    [Consumes(MediaTypeNames.Application.Json)]
-    [ApiController]
-    public class CategoriaController : ControllerBase
+    public class PedidoController : Controller
     {
-        private readonly ICategoriaService _categoriaService;
-        public CategoriaController(ICategoriaService categoriaService)
+        private readonly IPedidoService _pedidoService;
+        public PedidoController(IPedidoService pedidoService)
         {
-            _categoriaService = categoriaService;
+            _pedidoService = pedidoService;
         }
 
-        [HttpGet] 
+        [HttpGet]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public ActionResult<IEnumerable<Categoria>> GetAll()
+        public ActionResult<IEnumerable<Pedido>> GetAll()
         {
-            var categorias = _categoriaService.GetAllAsync();
-            
-            return Ok(JsonSerializer.Serialize(categorias, new JsonSerializerOptions()
+            var pedidos = _pedidoService.GetAllAsync();
+
+            return Ok(JsonSerializer.Serialize(pedidos, new JsonSerializerOptions()
             {
                 MaxDepth = 0,
                 IgnoreNullValues = true,
@@ -37,14 +35,14 @@ namespace Jwt_Pedidos_v1.API.Controllers
 
         [HttpGet("{id}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public ActionResult<Categoria> Get(int id)
+        public ActionResult<Pedido> Get(int id)
         {
-            var categoria = _categoriaService.GetByIdAsync(c => c.CategoriaId == id).Result;
+            var pedido = _pedidoService.GetByIdAsync(p => p.PedidoId == id).Result;
 
-            if (categoria is null)
+            if (pedido is null)
                 return NotFound();
-            
-            return Ok(JsonSerializer.Serialize(categoria, new JsonSerializerOptions()
+
+            return Ok(JsonSerializer.Serialize(pedido, new JsonSerializerOptions()
             {
                 MaxDepth = 0,
                 IgnoreNullValues = true,
@@ -54,28 +52,28 @@ namespace Jwt_Pedidos_v1.API.Controllers
 
         [HttpPost]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public IActionResult Create(Categoria categoria)
+        public IActionResult Create(Pedido pedido)
         {
-            if (_categoriaService.AddAsync(categoria).Result == false)
+            if (_pedidoService.AddAsync(pedido).Result == false)
                 return NotFound();
 
-            return CreatedAtAction(nameof(Create), categoria);
+            return CreatedAtAction(nameof(Create), pedido);
         }
- 
+
         [HttpPut("{id}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public IActionResult Update(int id, Categoria categoria)
+        public IActionResult Update(int id, Pedido pedido)
         {
             if (id <= 0)
                 return NotFound();
 
-            if (categoria is null)
+            if (pedido is null)
                 return NotFound();
 
-            if (categoria.CategoriaId != id)
+            if (pedido.PedidoId != id)
                 return NotFound();
 
-            if (_categoriaService.Update(categoria).Result == false)
+            if (_pedidoService.Update(pedido).Result == false)
                 return NotFound();
 
             return NoContent();
@@ -85,12 +83,12 @@ namespace Jwt_Pedidos_v1.API.Controllers
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public IActionResult Delete(int id)
         {
-            var existingCategoria = _categoriaService.GetByIdAsync(c => c.CategoriaId == id).Result;
+            var existingPedido = _pedidoService.GetByIdAsync(p => p.PedidoId == id).Result;
 
-            if (existingCategoria is null)
+            if (existingPedido is null)
                 return NotFound();
 
-            if (_categoriaService.Delete(existingCategoria).Result == false)
+            if (_pedidoService.Delete(existingPedido).Result == false)
                 return NotFound();
 
             return NoContent();
