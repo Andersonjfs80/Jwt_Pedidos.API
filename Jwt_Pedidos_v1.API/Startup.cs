@@ -61,9 +61,7 @@ namespace Jwt_Pedidos_v1.API
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseSwagger();
-            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Jwt_Pedidos_v1.API v1"));
-
+            app.AddSwaggerApp();
             app.UseHttpsRedirection();
             app.UseRouting();
             app.UseCors(x => x

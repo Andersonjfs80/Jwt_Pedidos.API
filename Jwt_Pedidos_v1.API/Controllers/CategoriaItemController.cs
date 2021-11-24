@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mime;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -16,6 +17,8 @@ namespace Jwt_Pedidos_v1.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Produces(MediaTypeNames.Application.Json)]
+    [Consumes(MediaTypeNames.Application.Json)]
     public class CategoriaItemController : ControllerBase
     {
         private readonly ICategoriaItemService _categoriaItemService;

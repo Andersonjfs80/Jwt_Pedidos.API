@@ -18,7 +18,7 @@ namespace Domain.Entidades
         [Required(ErrorMessage = "Informe o status.")]
         [Display(Name = "Status")]
         [Column(Order = 2)]
-        public bool Status { get; set; }
+        public bool Status { get; set; } = true;
 
         [Required]
         [Column(Order = 3)]
@@ -34,12 +34,12 @@ namespace Domain.Entidades
         [Column(Order = 5)]
         [Display(Name = "Data de saída")]
         [DisplayFormat(DataFormatString = "mm/dd/yyyy")]
-        public DateTime DataSaida { get; set; }
+        public DateTime? DataSaida { get; set; }
 
         [Required]
         [Column(Order = 6)]
         [Display(Name = "Data de cadastro")]
         [DisplayFormat(DataFormatString = "mm/dd/yyyy")]
-        public DateTime DataCadastro { get; set; }
+        public DateTime DataCadastro { get; set; } = DateTime.Now;        
     }
 }

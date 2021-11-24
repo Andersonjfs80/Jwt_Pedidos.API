@@ -77,7 +77,7 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("DataEmissao")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("DataSaida")
+                    b.Property<DateTime?>("DataSaida")
                         .HasColumnType("datetime2");
 
                     b.Property<bool>("Status")
@@ -118,6 +118,9 @@ namespace Infrastructure.Migrations
                     b.Property<bool>("Status")
                         .HasColumnType("bit");
 
+                    b.Property<int>("TabelaPrecoId")
+                        .HasColumnType("int");
+
                     b.Property<int>("UnidadeId")
                         .HasColumnType("int");
 
@@ -132,6 +135,8 @@ namespace Infrastructure.Migrations
                     b.HasIndex("PedidoId");
 
                     b.HasIndex("ProdutoId");
+
+                    b.HasIndex("TabelaPrecoId");
 
                     b.HasIndex("UnidadeId");
 
@@ -328,6 +333,12 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Domain.Entidades.TabelaPreco", "TabelaPreco")
+                        .WithMany()
+                        .HasForeignKey("TabelaPrecoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Domain.Entidades.Unidade", "Unidade")
                         .WithMany()
                         .HasForeignKey("UnidadeId")
@@ -337,6 +348,8 @@ namespace Infrastructure.Migrations
                     b.Navigation("Pedido");
 
                     b.Navigation("Produto");
+
+                    b.Navigation("TabelaPreco");
 
                     b.Navigation("Unidade");
                 });

@@ -45,7 +45,7 @@ namespace Jwt_Pedidos_v1.API.Middlewares
             });
         }
 
-        public static void AddSwaggerApp(this IApplicationBuilder app, string routePrefix)
+        public static void AddSwaggerApp(this IApplicationBuilder app)
         {
             app.UseSwagger();
             app.UseSwaggerUI(c =>
@@ -53,7 +53,7 @@ namespace Jwt_Pedidos_v1.API.Middlewares
                 c.SwaggerEndpoint("/swagger/v1/swagger.json",
                     "Anderson Auhorization Jwt Api");
 
-                c.RoutePrefix = routePrefix;
+                c.DefaultModelsExpandDepth(-1);
             });
         }
     }

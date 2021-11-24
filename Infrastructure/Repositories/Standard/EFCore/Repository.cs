@@ -24,6 +24,7 @@ namespace Infrastructure.Repositories.Standard.EFCore
         public Repository(DbContext dbContext)
         {
             this.dbContext = dbContext;
+            this.dbContext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
             this.dbSet = this.dbContext.Set<TEntity>();
         }
 
@@ -47,12 +48,12 @@ namespace Infrastructure.Repositories.Standard.EFCore
 
         public async Task<IEnumerable<TEntity>> GetAllAsync()
         {
-            return await dbSet.ToListAsync();
+            return await dbSet.AsNoTracking().ToListAsync();
         }
 
         public async Task<TEntity> GetByIdAsync(Expression<Func<TEntity, bool>> filter)
         {
-            return await dbSet.Where(filter).FirstOrDefaultAsync();
+            return await dbSet.Where(filter).AsNoTracking().FirstOrDefaultAsync();
         }
 
         public async Task<int> SaveAsync()
@@ -90,7 +91,7 @@ namespace Infrastructure.Repositories.Standard.EFCore
                 query = orderBy(query);
             }
 
-            return await query.ToListAsync();
+            return await query.AsNoTracking().ToListAsync();
         }
 
         public async Task<TEntity> GetByIdSingleOrDefaultAsync(
@@ -103,7 +104,7 @@ namespace Infrastructure.Repositories.Standard.EFCore
                 query = GenerateIncludeProperties(query, includeProperties);
             }
 
-            return await query.SingleOrDefaultAsync(filter);
+            return await query.AsNoTracking().SingleOrDefaultAsync(filter);
         }
 
         public void Dispose()

@@ -60,7 +60,7 @@ namespace Infrastructure.Migrations
                         column: x => x.UnidadeId,
                         principalTable: "Unidades",
                         principalColumn: "UnidadeId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
                 });
 
             migrationBuilder.CreateIndex(

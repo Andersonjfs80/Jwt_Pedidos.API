@@ -24,12 +24,23 @@ namespace Application.Service.Domain
             Func<IQueryable<PedidoItem>, IOrderedQueryable<PedidoItem>> orderBy = null, 
             params string[] includeProperties)
         {
-            return await _repository.GetAllIncludingAsync(filter, orderBy, includeProperties: new string[] { nameof(PedidoItem.Pedido) });
+            return await _repository.GetAllIncludingAsync(
+                filter, 
+                orderBy, 
+                includeProperties: new string[] { 
+                    nameof(PedidoItem.Produto), 
+                    nameof(PedidoItem.Unidade), 
+                    nameof(PedidoItem.TabelaPreco) });
         }
 
         public async Task<PedidoItem> GetByIdIncludingAsync(Expression<Func<PedidoItem, bool>> filter, params string[] includeProperties)
         {
-            return await _repository.GetByIdIncludingAsync(filter, includeProperties: new string[] { nameof(PedidoItem.Pedido) });
+            return await _repository.GetByIdIncludingAsync(
+                filter, 
+                includeProperties: new string[] { 
+                    nameof(PedidoItem.Produto), 
+                    nameof(PedidoItem.Unidade), 
+                    nameof(PedidoItem.TabelaPreco) });
         }
     }
 }

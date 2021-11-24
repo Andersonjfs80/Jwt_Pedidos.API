@@ -11,11 +11,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Jwt_Pedidos_v1.API.Services;
+using System.Net.Mime;
 
 namespace Jwt_Pedidos_v1.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Produces(MediaTypeNames.Application.Json)]
+    [Consumes(MediaTypeNames.Application.Json)]
     public class AuthenticationController : ControllerBase
     {
         private JwtTokenConfiguration _tokenConfiguration;

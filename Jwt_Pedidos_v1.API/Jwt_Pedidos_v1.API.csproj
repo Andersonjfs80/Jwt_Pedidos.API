@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-    <AssemblyName>Jwt_Pedidos_v1.API</AssemblyName>
-    <RootNamespace>Jwt_Pedidos_v1.API</RootNamespace>
+    <AssemblyName>Jwt_Lista_Compras</AssemblyName>
+    <RootNamespace>Jwt_Lista_Compras</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
