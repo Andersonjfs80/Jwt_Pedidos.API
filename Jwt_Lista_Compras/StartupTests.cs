@@ -1,5 +1,4 @@
 using Jwt_Lista_Compras.Middlewares;
-using Jwt_Pedidos_v1.API.Middlewares;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -7,32 +6,29 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using System.IO;
 
 namespace Jwt_Lista_Compras
 {
-    public class Startup
+    public class StartupTests
     {
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
-
         public IConfiguration Configuration { get; }
+        public StartupTests()
+        {
+            Configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile(path: "appsettings.json", optional: false, reloadOnChange: true)
+                .Build();
+
+            var serviceCollection = new ServiceCollection();
+            serviceCollection.AddSingleton<IConfiguration>(Configuration);
+            ConfigureServices(serviceCollection);
+        }        
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
-        {
-            //services.AddMvc().AddNewtonsoftJson(
-            //  options => options.SerializerSettings.ContractResolver = new DefaultContractResolver()
-
-            //).AddNewtonsoftJson(
-            //  options => options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Serialize
-
-            //); //Caso não funcionar em referencia circular adiconar o atributi [JsonIgnore]
-
+        { 
             services.AddControllersWithViews()
-                                  //.AddJsonOptions(o => o.JsonSerializerOptions
-                                  //.ReferenceHandler = ReferenceHandler.Preserve)
                                   .ConfigureApiBehaviorOptions(options =>
                                   {
                                       options.SuppressMapClientErrors = true;
@@ -49,9 +45,8 @@ namespace Jwt_Lista_Compras
             //services.AddJwtMiddleware(configuration);
             //services.AddLoggerMiddleware();
             services.AddDependencyInjectionMiddleware();
-            services.AddGlobalExceptionHandlerMiddleware();
             services.AddSwaggerService();            
-            services.AddHealthChecks();            
+            services.AddHealthChecks();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -62,7 +57,6 @@ namespace Jwt_Lista_Compras
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseGlobalExceptionHandlerMiddleware();
             app.AddSwaggerApp();
             app.UseHttpsRedirection();
             app.UseRouting();
@@ -70,17 +64,10 @@ namespace Jwt_Lista_Compras
                 .AllowAnyOrigin()
                 .AllowAnyMethod()
                 .AllowAnyHeader());
-            //app.UseAuthentication();
-            //app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-
-                //endpoints.MapGet("/", async context =>
-                //{
-                //    await context.Response.WriteAsync("Hello World!");
-                //});
             });
         }
     }
