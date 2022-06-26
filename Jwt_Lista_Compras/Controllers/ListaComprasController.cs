@@ -26,7 +26,8 @@ namespace Jwt_Lista_Compras.Controllers
             _pedidoService = pedidoService;
             _pedidoItemService = pedidoItemService;
         }
-
+        
+       
         [HttpGet]
         public async Task<IActionResult>  ObterListaCompras()
         {             
