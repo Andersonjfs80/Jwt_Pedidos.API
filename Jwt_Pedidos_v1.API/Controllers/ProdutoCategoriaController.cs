@@ -30,12 +30,7 @@ namespace Jwt_Pedidos_v1.API.Controllers
         {
             var produtosCategorias = _produtoCategoriaService.GetAllAsync();
 
-            return Ok(JsonSerializer.Serialize(produtosCategorias, new JsonSerializerOptions()
-            {
-                MaxDepth = 0,
-                IgnoreNullValues = true,
-                IgnoreReadOnlyProperties = true
-            }));
+            return Ok(JsonSerializer.Serialize(produtosCategorias));
         }
 
         [HttpGet("{id}")]
@@ -47,12 +42,7 @@ namespace Jwt_Pedidos_v1.API.Controllers
             if (produtoCategoria is null)
                 return NotFound();
 
-            return Ok(JsonSerializer.Serialize(produtoCategoria, new JsonSerializerOptions()
-            {
-                MaxDepth = 0,
-                IgnoreNullValues = true,
-                IgnoreReadOnlyProperties = true
-            }));
+            return Ok(JsonSerializer.Serialize(produtoCategoria));
         }
 
         [HttpPost]

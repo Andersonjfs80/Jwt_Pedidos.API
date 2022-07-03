@@ -11,11 +11,12 @@ using System.Linq;
 using System.Net;
 
 namespace Jwt_Lista_Compras.Controllers
-{
-    [Route("api/[controller]")]    
+{     
     [Produces(MediaTypeNames.Application.Json)]
     [Consumes(MediaTypeNames.Application.Json)]
+    [ApiVersion("1")]
     [ApiController]
+    [Route("api/[controller]/v{version:apiVersion}")]
     public class ListaComprasController : ControllerBase
     {
         private readonly IPedidoService _pedidoService;
@@ -37,7 +38,7 @@ namespace Jwt_Lista_Compras.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]        
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> CriarAtualizarCompras([FromBody] PedidoViewModelDTO pedidoViewModel)
+        public async Task<IActionResult> ProcessarCompras([FromBody] PedidoViewModelDTO pedidoViewModel)
         {
             var pedido = (Pedido)pedidoViewModel;
 
@@ -72,7 +73,7 @@ namespace Jwt_Lista_Compras.Controllers
             pedidoViewModel.ValorTotal = pedidoViewModel.PedidoItens.Sum(tot => tot.ValorTotal);
 
             return CreatedAtAction(
-                nameof(CriarAtualizarCompras),
+                nameof(ProcessarCompras),
                 new { id = pedidoViewModel.PedidoId },
                 pedidoViewModel);
         }

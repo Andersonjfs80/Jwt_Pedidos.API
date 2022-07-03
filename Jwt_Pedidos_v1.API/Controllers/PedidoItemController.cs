@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mime;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Jwt_Pedidos_v1.API.Controllers
@@ -30,12 +31,7 @@ namespace Jwt_Pedidos_v1.API.Controllers
         {
             var pedidoItens = _pedidoItemService.GetAllIncludingAsync(p => p.PedidoId == pedidoId);
 
-            return Ok(JsonSerializer.Serialize(pedidoItens, new JsonSerializerOptions()
-            {
-                MaxDepth = 0,
-                IgnoreNullValues = true,
-                IgnoreReadOnlyProperties = true
-            }));
+            return Ok(JsonSerializer.Serialize(pedidoItens));
         }
 
         [HttpGet("{id}")]
@@ -47,12 +43,7 @@ namespace Jwt_Pedidos_v1.API.Controllers
             if (pedido is null)
                 return NotFound();
 
-            return Ok(JsonSerializer.Serialize(pedido, new JsonSerializerOptions()
-            {
-                MaxDepth = 0,
-                IgnoreNullValues = true,
-                IgnoreReadOnlyProperties = true
-            }));
+            return Ok(JsonSerializer.Serialize(pedido));
         }
 
         [HttpPost]

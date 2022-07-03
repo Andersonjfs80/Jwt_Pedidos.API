@@ -19,7 +19,8 @@ namespace Jwt_Pedidos_v1.API.Services
                 expires: DateTime.UtcNow.AddSeconds(tokenConfiguration.ExpirationInSeconds),
                 signingCredentials: new SigningCredentials(
                     new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenConfiguration.Key)),
-                    SecurityAlgorithms.HmacSha256));
+                    SecurityAlgorithms.HmacSha256)
+            );
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var stringToken = tokenHandler.WriteToken(token);
