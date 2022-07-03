@@ -11,12 +11,12 @@ using System.Linq;
 using System.Net;
 
 namespace Jwt_Lista_Compras.Controllers
-{     
+{   
     [Produces(MediaTypeNames.Application.Json)]
     [Consumes(MediaTypeNames.Application.Json)]
     [ApiVersion("1")]
     [ApiController]
-    [Route("api/v{version:apiVersion}/[controller]")]
+    [Route("api/v{version:apiVersion}/[controller]/")]
     public class ListaComprasController : ControllerBase
     {
         private readonly IPedidoService _pedidoService;
@@ -27,17 +27,17 @@ namespace Jwt_Lista_Compras.Controllers
             _pedidoService = pedidoService;
             _pedidoItemService = pedidoItemService;
         }
-        
-       
-        [HttpGet]
+
+
+        [HttpGet("obter-lista-compras")]       
         public async Task<IActionResult>  ObterListaCompras()
         {             
              return Ok(await _pedidoService.GetAllAsync());
         }
 
-        [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created)]        
+        [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [HttpPost("processar-compras")]
         public async Task<IActionResult> ProcessarCompras([FromBody] PedidoViewModelDTO pedidoViewModel)
         {
             var pedido = (Pedido)pedidoViewModel;

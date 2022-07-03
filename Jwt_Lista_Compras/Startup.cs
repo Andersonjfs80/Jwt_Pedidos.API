@@ -38,6 +38,8 @@ namespace Jwt_Lista_Compras
                                       options.SuppressMapClientErrors = true;
                                   });
 
+            //Versioning API
+            services.AddApiVersioning();
             services.AddCors();
             services.AddControllers();            
             //Custom
