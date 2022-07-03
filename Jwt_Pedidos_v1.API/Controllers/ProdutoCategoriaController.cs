@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mime;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Jwt_Pedidos_v1.API.Controllers
@@ -42,7 +43,14 @@ namespace Jwt_Pedidos_v1.API.Controllers
             if (produtoCategoria is null)
                 return NotFound();
 
-            return Ok(JsonSerializer.Serialize(produtoCategoria));
+            JsonSerializerOptions options = new()
+            {
+                IgnoreReadOnlyProperties = true,
+                WriteIndented = true,
+                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault
+            };
+
+            return Ok(JsonSerializer.Serialize(produtoCategoria, options));
         }
 
         [HttpPost]
