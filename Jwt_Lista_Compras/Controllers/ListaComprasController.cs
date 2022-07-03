@@ -16,7 +16,7 @@ namespace Jwt_Lista_Compras.Controllers
     [Consumes(MediaTypeNames.Application.Json)]
     [ApiVersion("1")]
     [ApiController]
-    [Route("api/[controller]/v{version:apiVersion}")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     public class ListaComprasController : ControllerBase
     {
         private readonly IPedidoService _pedidoService;
