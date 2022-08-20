@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mime;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Jwt_Pedidos_v1.API.Controllers
@@ -33,7 +34,7 @@ namespace Jwt_Pedidos_v1.API.Controllers
             return Ok(JsonSerializer.Serialize(pedidos, new JsonSerializerOptions()
             {
                 MaxDepth = 0,
-                IgnoreNullValues = true,
+                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
                 IgnoreReadOnlyProperties = true
             }));
         }
@@ -45,29 +46,34 @@ namespace Jwt_Pedidos_v1.API.Controllers
             var pedido = _pedidoService.GetByIdAsync(p => p.PedidoId == id).Result;
 
             if (pedido is null)
+            {
                 return NotFound();
+            }
 
             return Ok(JsonSerializer.Serialize(pedido, new JsonSerializerOptions()
             {
                 MaxDepth = 0,
-                IgnoreNullValues = true,
+                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
                 IgnoreReadOnlyProperties = true
             }));
         }
 
         [HttpPost]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public IActionResult Create(Pedido pedido)
+        public async Task<IActionResult> Create(Pedido pedido)
         {
-            if (_pedidoService.AddAsync(pedido).Result == false)
+            await _pedidoService.AddAsync(pedido);
+            if (!await _pedidoService.SaveAsync())
+			{
                 return NotFound();
+            }
 
             return CreatedAtAction(nameof(Create), pedido);
         }
 
         [HttpPut("{id}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public IActionResult Update(int id, Pedido pedido)
+        public async Task<IActionResult> Update(int id, Pedido pedido)
         {
             if (id <= 0)
                 return NotFound();
@@ -78,23 +84,29 @@ namespace Jwt_Pedidos_v1.API.Controllers
             if (pedido.PedidoId != id)
                 return NotFound();
 
-            if (_pedidoService.Update(pedido).Result == false)
+            _pedidoService.Update(pedido);
+            if (!await _pedidoService.SaveAsync())
+            {
                 return NotFound();
+            }
 
             return NoContent();
         }
 
         [HttpDelete("{id}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             var existingPedido = _pedidoService.GetByIdAsync(p => p.PedidoId == id).Result;
 
             if (existingPedido is null)
                 return NotFound();
 
-            if (_pedidoService.Delete(existingPedido).Result == false)
+            _pedidoService.Delete(existingPedido);
+            if (!await _pedidoService.SaveAsync())
+            {
                 return NotFound();
+            }
 
             return NoContent();
         }

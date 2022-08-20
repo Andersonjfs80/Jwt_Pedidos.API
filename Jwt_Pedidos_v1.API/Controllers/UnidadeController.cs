@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mime;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Jwt_Pedidos_v1.API.Controllers
@@ -35,7 +36,7 @@ namespace Jwt_Pedidos_v1.API.Controllers
             return Ok(JsonSerializer.Serialize(unidades, new JsonSerializerOptions()
             {
                 MaxDepth = 0,
-                IgnoreNullValues = true,
+                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
                 IgnoreReadOnlyProperties = true
             }));
         }
@@ -52,7 +53,7 @@ namespace Jwt_Pedidos_v1.API.Controllers
             return Ok(JsonSerializer.Serialize(unidade, new JsonSerializerOptions()
             {
                 MaxDepth = 0,
-                IgnoreNullValues = true,
+                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
                 IgnoreReadOnlyProperties = true
             }));
         }

@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mime;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -39,7 +40,7 @@ namespace Jwt_Pedidos_v1.API.Controllers
             return Ok(JsonSerializer.Serialize(categoriaItens, new JsonSerializerOptions()
             {
                 MaxDepth = 0,
-                IgnoreNullValues = true,
+                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
                 IgnoreReadOnlyProperties = true
             }));
         }
@@ -60,7 +61,7 @@ namespace Jwt_Pedidos_v1.API.Controllers
             return Ok(JsonSerializer.Serialize(categoriaItem, new JsonSerializerOptions()
             {
                 MaxDepth = 0,
-                IgnoreNullValues = true,
+                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
                 IgnoreReadOnlyProperties = true
             }));
         }

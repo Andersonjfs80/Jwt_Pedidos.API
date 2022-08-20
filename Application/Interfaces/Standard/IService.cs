@@ -10,9 +10,14 @@ namespace Application.Interfaces.Standard
     {
         Task<IEnumerable<TEntity>> GetAllAsync();
         Task<TEntity> GetByIdAsync(Expression<Func<TEntity, bool>> filter);
-        Task<bool> AddAsync(TEntity entity);
-        Task<bool> Update(TEntity entity);
-        Task<bool> Delete(TEntity entity);
+        Task AddAsync(TEntity entity);
+        void Update(TEntity entity);
+        void Update(IEnumerable<TEntity> entity);
+        void Delete(TEntity entity);
+        void Delete(IEnumerable<TEntity> entity);
         Task<bool> SaveAsync();
+        Task StartTransactionAsync();
+        Task CommitAsync();
+        Task RollbackAsync();
     }
 }

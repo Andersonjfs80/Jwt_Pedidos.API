@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mime;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Jwt_Pedidos_v1.API.Controllers
@@ -30,12 +31,7 @@ namespace Jwt_Pedidos_v1.API.Controllers
         {
             var produtosCategorias = _produtoCategoriaService.GetAllAsync();
 
-            return Ok(JsonSerializer.Serialize(produtosCategorias, new JsonSerializerOptions()
-            {
-                MaxDepth = 0,
-                IgnoreNullValues = true,
-                IgnoreReadOnlyProperties = true
-            }));
+            return Ok(JsonSerializer.Serialize(produtosCategorias));
         }
 
         [HttpGet("{id}")]
@@ -47,12 +43,14 @@ namespace Jwt_Pedidos_v1.API.Controllers
             if (produtoCategoria is null)
                 return NotFound();
 
-            return Ok(JsonSerializer.Serialize(produtoCategoria, new JsonSerializerOptions()
+            JsonSerializerOptions options = new()
             {
-                MaxDepth = 0,
-                IgnoreNullValues = true,
-                IgnoreReadOnlyProperties = true
-            }));
+                IgnoreReadOnlyProperties = true,
+                WriteIndented = true,
+                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault
+            };
+
+            return Ok(JsonSerializer.Serialize(produtoCategoria, options));
         }
 
         [HttpPost]

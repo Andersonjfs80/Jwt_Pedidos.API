@@ -17,28 +17,50 @@ namespace Application.Service.Standard
             _repository = repository;
         }
 
-        public virtual async Task<bool> AddAsync(TEntity obj)
-        {
-            _repository.AddAsync(obj);
-            return await SaveAsync();
-        }
+		public async Task AddAsync(TEntity obj)
+		{
+			await _repository.AddAsync(obj);
+		}
 
-        public virtual async Task<bool> Update(TEntity obj)
+		public void Update(TEntity obj)
         {
             _repository.Update(obj);
-            return await SaveAsync();
         }
 
-        public virtual async Task<bool> Delete(TEntity obj)
+        public void Update(IEnumerable<TEntity> obj)
+        {
+            _repository.Update(obj);           
+        }
+
+        public void Delete(TEntity obj)
         {
             _repository.Delete(obj);
-            return await SaveAsync();
         }
 
-        public virtual async Task<bool> SaveAsync() => await _repository.SaveAsync() > 0 ? true : false;
+        public void Delete(IEnumerable<TEntity> obj)
+        {
+            _repository.Delete(obj);
+        }
+
+        public virtual async Task<bool> SaveAsync() => await _repository.SaveAsync();
 
         public virtual async Task<IEnumerable<TEntity>> GetAllAsync() => await _repository.GetAllAsync();
 
         public virtual async Task<TEntity> GetByIdAsync(Expression<Func<TEntity, bool>> filter) => await _repository.GetByIdAsync(filter);
-    }
+
+		public async Task StartTransactionAsync()
+		{
+			await _repository.StartTransactionAsync();    
+		}
+
+		public async Task CommitAsync()
+		{
+            await _repository.CommitAsync();
+        }
+
+		public async Task RollbackAsync()
+		{
+            await _repository.RollbackAsync();
+        }
+	}
 }

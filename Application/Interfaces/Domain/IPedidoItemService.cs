@@ -1,4 +1,5 @@
 ﻿using Application.Interfaces.Standard;
+using Application.ViewModels;
 using Domain.Entidades;
 using System;
 using System.Collections.Generic;
@@ -18,5 +19,7 @@ namespace Application.Interfaces.Domain
 
         Task<PedidoItem> GetByIdIncludingAsync(
             Expression<Func<PedidoItem, bool>> filter, params string[] includeProperties);
+
+        Task<List<PedidoItemViewModel>> ProcessarPedidoItens(List<PedidoItemViewModel> pedidoItens);
     }
 }
