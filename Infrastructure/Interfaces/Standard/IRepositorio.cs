@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore.Storage;
+using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Text;
@@ -10,9 +11,14 @@ namespace Infrastructure.Interfaces.Standard
     {
         Task<IEnumerable<TEntity>> GetAllAsync();
         Task<TEntity> GetByIdAsync(Expression<Func<TEntity, bool>> filter);
-        void AddAsync(TEntity entity);
+        Task AddAsync(TEntity entity);
         void Update(TEntity entity);
+        void Update(IEnumerable<TEntity> entity);
         void Delete(TEntity entity);
-        Task<int> SaveAsync();
+        void Delete(IEnumerable<TEntity> entity);
+        Task<bool> SaveAsync();
+        Task StartTransactionAsync();
+        Task CommitAsync();
+        Task RollbackAsync();
     }
 }

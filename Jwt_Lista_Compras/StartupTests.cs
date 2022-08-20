@@ -1,4 +1,5 @@
 using Jwt_Lista_Compras.Middlewares;
+using Jwt_Pedidos_v1.API.Middlewares;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -10,7 +11,7 @@ using System.IO;
 
 namespace Jwt_Lista_Compras
 {
-    public class StartupTests
+	public class StartupTests
     {
         public IConfiguration Configuration { get; }
         public StartupTests()

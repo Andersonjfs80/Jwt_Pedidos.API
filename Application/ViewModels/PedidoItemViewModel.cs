@@ -1,41 +1,40 @@
 ﻿using Domain.Entidades;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
-namespace Jwt_Pedidos_v1.API.ViewModels
+namespace Application.ViewModels
 {
-    public class PedidoItemViewModelDTO
+	public class PedidoItemViewModel
     {
-        public PedidoItemViewModelDTO()
+        public PedidoItemViewModel()
         {
-            Produto = new PedidoItemProdutoViewModelDTO();
+            Produto = new PedidoItemProdutoViewModel();
         }
 
-        [JsonPropertyName("ItemId")]
+        [JsonPropertyName("itemId")]
         public int PedidoItemId { get; set; }
 
+        [JsonPropertyName("pedidoId")]
         public int PedidoId { get; set; }
 
         [JsonIgnore]
         public virtual Pedido Pedido { get; set; }
 
-        [JsonPropertyName("Produto")]
-        public virtual PedidoItemProdutoViewModelDTO Produto { get; set; }
+        [JsonPropertyName("produto")]
+        public virtual PedidoItemProdutoViewModel Produto { get; set; }
 
+        [JsonPropertyName("valorUnitario")]
         public double ValorUnitario { get; set; }
 
+        [JsonPropertyName("quantidade")]
         public double Quantidade { get; set; }
 
+        [JsonPropertyName("valorTotal")]
         public double ValorTotal { get; set; }
 
+        [JsonPropertyName("status")]
         public bool Status { get; set; } = true;
                
-        public static implicit operator PedidoItem(PedidoItemViewModelDTO pedidoItemViewModelDTO)
+        public static implicit operator PedidoItem(PedidoItemViewModel pedidoItemViewModelDTO)
         {
             return new PedidoItem()
             {

@@ -14,22 +14,19 @@ namespace Infrastructure.Repositories.Domain
     public class CategoriaItemRepository : Repository<CategoriaItem>, ICategoriaItemRepository
     {
         public CategoriaItemRepository(ApplicationContext context) : base(context) { }
-        public Task<IEnumerable<CategoriaItem>> GetAllIncludingAsync(    
-            Expression<Func<CategoriaItem, bool>> filter = null,    
-            Func<IQueryable<CategoriaItem>, IOrderedQueryable<CategoriaItem>> orderBy = null,    
-            params string[] includeProperties)        
-        {
+
+		Task<IEnumerable<CategoriaItem>> ICategoriaItemRepository.GetAllIncludingAsync(Expression<Func<CategoriaItem, bool>> filter, Func<IQueryable<CategoriaItem>, IOrderedQueryable<CategoriaItem>> orderBy, params string[] includeProperties)
+		{
             IQueryable<CategoriaItem> query = dbSet;
 
             return GetAllToListAsync(query, filter, orderBy);
         }
 
-        public Task<CategoriaItem> GetByIdIncludingAsync(
-            Expression<Func<CategoriaItem, bool>> filter, params string[] includeProperties)
-        {
+		Task<CategoriaItem> ICategoriaItemRepository.GetByIdIncludingAsync(Expression<Func<CategoriaItem, bool>> filter, params string[] includeProperties)
+		{
             IQueryable<CategoriaItem> query = dbSet;
 
             return GetByIdSingleOrDefaultAsync(query, filter, includeProperties);
         }
-    }
+	}
 }

@@ -40,6 +40,6 @@ namespace Domain.Entidades
         [Column(Order = 6)]
         [Display(Name = "Data de cadastro")]
         [DisplayFormat(DataFormatString = "mm/dd/yyyy")]
-        public DateTime DataCadastro { get; set; } = DateTime.Now;        
+        public DateTime DataCadastro { get; set; } = DateTime.Now;
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Infrastructure.Interfaces.Standard;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +16,9 @@ namespace Infrastructure.Repositories.Standard.EFCore
 
         protected readonly DbSet<TEntity> dbSet;
 
-        public Repository()
+        protected IDbContextTransaction dbContextTransactionAsync;
+
+		public Repository()
         {
             this.dbContext = Activator.CreateInstance<DbContext>();
             this.dbSet = this.dbContext.Set<TEntity>();
@@ -28,10 +31,10 @@ namespace Infrastructure.Repositories.Standard.EFCore
             this.dbSet = this.dbContext.Set<TEntity>();
         }
 
-        public async void AddAsync(TEntity entity)
+        public async Task AddAsync(TEntity entity)
         {
             dbSet.Attach(entity).State = EntityState.Added;
-            await dbSet.AddAsync(entity);
+            await dbSet.AddAsync(entity);           
         }
 
         public void Update(TEntity entity)
@@ -40,10 +43,27 @@ namespace Infrastructure.Repositories.Standard.EFCore
             dbSet.Update(entity);
         }
 
+        public void Update(IEnumerable<TEntity> entity)
+        {
+            dbSet.AttachRange(entity);
+            dbSet.UpdateRange(entity);
+        }
+
         public void Delete(TEntity entity)
         {
             dbSet.Attach(entity).State = EntityState.Deleted;
             dbSet.Remove(entity);
+        }
+
+        public void Delete(IEnumerable<TEntity> entity)
+        {
+			dbSet.AttachRange(entity);
+            dbSet.RemoveRange(entity);
+        }
+
+        public async Task<bool> SaveAsync()
+        {
+            return await dbContext.SaveChangesAsync() > 0;
         }
 
         public async Task<IEnumerable<TEntity>> GetAllAsync()
@@ -54,11 +74,6 @@ namespace Infrastructure.Repositories.Standard.EFCore
         public async Task<TEntity> GetByIdAsync(Expression<Func<TEntity, bool>> filter)
         {
             return await dbSet.Where(filter).AsNoTracking().FirstOrDefaultAsync();
-        }
-
-        public async Task<int> SaveAsync()
-        {
-            return await dbContext.SaveChangesAsync();
         }
 
         private IQueryable<TEntity> GenerateIncludeProperties(
@@ -113,5 +128,19 @@ namespace Infrastructure.Repositories.Standard.EFCore
             GC.SuppressFinalize(this);
         }
 
-    }
+		public async Task StartTransactionAsync()
+		{
+            dbContextTransactionAsync = await dbContext.Database.BeginTransactionAsync();
+        }
+
+        public async Task CommitAsync()
+        {
+            await dbContextTransactionAsync.CommitAsync();
+        }
+
+        public async Task RollbackAsync()
+        {
+            await dbContextTransactionAsync.RollbackAsync();
+        }
+	}
 }

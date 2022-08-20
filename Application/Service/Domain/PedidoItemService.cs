@@ -1,5 +1,6 @@
 ﻿using Application.Interfaces.Domain;
 using Application.Service.Standard;
+using Application.ViewModels;
 using Domain.Entidades;
 using Infrastructure.Interfaces.Domain;
 using System;
@@ -33,7 +34,8 @@ namespace Application.Service.Domain
                     nameof(PedidoItem.TabelaPreco) });
         }
 
-        public async Task<PedidoItem> GetByIdIncludingAsync(Expression<Func<PedidoItem, bool>> filter, params string[] includeProperties)
+        public async Task<PedidoItem> GetByIdIncludingAsync(
+            Expression<Func<PedidoItem, bool>> filter, params string[] includeProperties)
         {
             return await _repository.GetByIdIncludingAsync(
                 filter, 
@@ -41,6 +43,29 @@ namespace Application.Service.Domain
                     nameof(PedidoItem.Produto), 
                     nameof(PedidoItem.Unidade), 
                     nameof(PedidoItem.TabelaPreco) });
+        }
+
+        public async Task<List<PedidoItemViewModel>> ProcessarPedidoItens(List<PedidoItemViewModel> pedidoItensViewModel)
+        {
+            var newPedidoItemViewModel = new List<PedidoItemViewModel>();
+            
+			foreach (var pedidoItemViewModel in pedidoItensViewModel)
+			{
+                var pedidoItem = (PedidoItem)pedidoItemViewModel;
+                if (pedidoItem.PedidoItemId > 0)
+                {
+					_repository.Update(pedidoItem);                    
+                }
+                else
+                {
+                    await _repository.AddAsync(pedidoItem);
+                }
+
+                await _repository.SaveAsync();
+                pedidoItemViewModel.PedidoItemId = pedidoItem.PedidoItemId;
+            }
+
+            return pedidoItensViewModel;
         }
     }
 }
