@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Net.Mime;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 
 namespace Jwt_Pedidos_v1.API.Controllers
 {
@@ -22,42 +23,32 @@ namespace Jwt_Pedidos_v1.API.Controllers
             _categoriaService = categoriaService;
         }
 
-        [HttpGet] 
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public ActionResult<IEnumerable<Categoria>> GetAll()
-        {
-            var categorias = _categoriaService.GetAllAsync();
-            
-            return Ok(JsonSerializer.Serialize(categorias, new JsonSerializerOptions()
-            {
-                MaxDepth = 0,
-                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-                IgnoreReadOnlyProperties = true
-            }));
-        }
+		[HttpGet]
+		[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+		public async Task<IActionResult> GetAll() => Ok(await _categoriaService.GetAllAsync());
+        //var categorias = _categoriaService.GetAllAsync();
+
+        //return Ok(JsonSerializer.Serialize(categorias, new JsonSerializerOptions()
+        //{
+        //    MaxDepth = 0,
+        //    DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+        //    IgnoreReadOnlyProperties = true
+        //}));
+
+
 
         [HttpGet("{id}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public ActionResult<Categoria> Get(int id)
+        public async Task<IActionResult> Get(int id)
         {
-            var categoria = _categoriaService.GetByIdAsync(c => c.CategoriaId == id).Result;
-
-            if (categoria is null)
-                return NotFound();
-            
-            return Ok(JsonSerializer.Serialize(categoria, new JsonSerializerOptions()
-            {
-                MaxDepth = 0,
-                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-                IgnoreReadOnlyProperties = true
-            }));
+            return Ok(await _categoriaService.GetByIdAsync(c => c.CategoriaId == id));
         }
 
         [HttpPost]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public IActionResult Create(Categoria categoria)
+        public async Task<IActionResult> Create(Categoria categoria)
         {
-            if (_categoriaService.AddAsync(categoria).Result == false)
+            if (!await _categoriaService.AddAsync(categoria) == false)
                 return NotFound();
 
             return CreatedAtAction(nameof(Create), categoria);
@@ -65,7 +56,7 @@ namespace Jwt_Pedidos_v1.API.Controllers
  
         [HttpPut("{id}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public IActionResult Update(int id, Categoria categoria)
+        public async Task<IActionResult> Update(int id, Categoria categoria)
         {
             if (id <= 0)
                 return NotFound();
@@ -75,8 +66,8 @@ namespace Jwt_Pedidos_v1.API.Controllers
 
             if (categoria.CategoriaId != id)
                 return NotFound();
-
-            if (_categoriaService.Update(categoria).Result == false)
+                        
+            if (!await _categoriaService.UpdateAsync(categoria) == false)
                 return NotFound();
 
             return NoContent();
@@ -84,14 +75,14 @@ namespace Jwt_Pedidos_v1.API.Controllers
 
         [HttpDelete("{id}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var existingCategoria = _categoriaService.GetByIdAsync(c => c.CategoriaId == id).Result;
+            var existingCategoria = await _categoriaService.GetByIdAsync(c => c.CategoriaId == id);
 
             if (existingCategoria is null)
                 return NotFound();
-
-            if (_categoriaService.Delete(existingCategoria).Result == false)
+                        
+            if (await _categoriaService.DeleteAsync(existingCategoria) == false)
                 return NotFound();
 
             return NoContent();

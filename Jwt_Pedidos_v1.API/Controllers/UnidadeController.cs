@@ -29,40 +29,23 @@ namespace Jwt_Pedidos_v1.API.Controllers
 
         [HttpGet]        
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public ActionResult<IEnumerable<Unidade>> GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            var unidades = _unidadeService.GetAllAsync();
-            
-            return Ok(JsonSerializer.Serialize(unidades, new JsonSerializerOptions()
-            {
-                MaxDepth = 0,
-                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-                IgnoreReadOnlyProperties = true
-            }));
+            return Ok(await _unidadeService.GetAllAsync());
         }
 
         [HttpGet("{id}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public ActionResult<Unidade> Get(int id)
+        public async Task<IActionResult> Get(int id)
         {
-            var unidade = _unidadeService.GetByIdAsync(u => u.UnidadeId == id).Result;
-
-            if (unidade is null)
-                return NotFound();
-            
-            return Ok(JsonSerializer.Serialize(unidade, new JsonSerializerOptions()
-            {
-                MaxDepth = 0,
-                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-                IgnoreReadOnlyProperties = true
-            }));
+            return Ok(await _unidadeService.GetByIdAsync(u => u.UnidadeId == id));
         }
 
         [HttpPost]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public IActionResult Create(Unidade unidade)
-        {
-            if (_unidadeService.AddAsync(unidade).Result == false)
+        public async Task<IActionResult> Create(Unidade unidade)
+        {            
+            if (!await _unidadeService.AddAsync(unidade) == false)
                 return NotFound();
 
             return CreatedAtAction(nameof(Create), unidade);
@@ -70,7 +53,7 @@ namespace Jwt_Pedidos_v1.API.Controllers
  
         [HttpPut("{id}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public IActionResult Update(int id, Unidade unidade)
+        public async Task<IActionResult> Update(int id, Unidade unidade)
         {
             if (id <= 0)
                 return NotFound();
@@ -80,8 +63,8 @@ namespace Jwt_Pedidos_v1.API.Controllers
 
             if (unidade.UnidadeId != id)
                 return NotFound();
-
-            if (_unidadeService.Update(unidade).Result == false)
+                        
+            if (!await _unidadeService.UpdateAsync(unidade) == false)
                 return NotFound();
 
             return NoContent();
@@ -89,14 +72,14 @@ namespace Jwt_Pedidos_v1.API.Controllers
 
         [HttpDelete("{id}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var existingUnidade = _unidadeService.GetByIdAsync(u => u.UnidadeId == id).Result;
+            var existingUnidade = await _unidadeService.GetByIdAsync(u => u.UnidadeId == id);
 
             if (existingUnidade is null)
                 return NotFound();
-
-            if (_unidadeService.Delete(existingUnidade).Result == false)
+                        
+            if (!await _unidadeService.DeleteAsync(existingUnidade) == false)
                 return NotFound();
 
             return NoContent();

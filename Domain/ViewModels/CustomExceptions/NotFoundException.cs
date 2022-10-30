@@ -5,9 +5,9 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.Common
+namespace Domain.ViewModels.CustomExceptions
 {
-	public class NaoEncontradoException : Exception
+	public class NotFoundException : Exception
 	{
 		public HttpStatusCode StatusCode { get; set; }
 

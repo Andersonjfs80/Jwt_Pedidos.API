@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Net.Mime;
 using System.Threading.Tasks;
 using Jwt_Pedidos_v1.API.Middlewares.Attributes;
-using Application.ViewModels;
+using Domain.ViewModels;
 
 namespace Jwt_Lista_Compras.Controllers
 {
@@ -19,62 +19,30 @@ namespace Jwt_Lista_Compras.Controllers
     {
         private readonly IPedidoService _pedidoService;
 
-        private readonly IPedidoItemService _pedidoItemService;
+		public ListaComprasController(IPedidoService pedidoService) => _pedidoService = pedidoService;
 
-        public ListaComprasController(IPedidoService pedidoService, IPedidoItemService pedidoItemService)        
-        {   
-            _pedidoService = pedidoService;
-            _pedidoItemService = pedidoItemService;
-        }
-
-        [HttpPost("listas-de-compras")]
+		[HttpPost("list-all-purchases")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> ObterListaCompras() => Ok(await _pedidoService.GetAllAsync());
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> GetListAllPurchases() => 
+            Ok(await _pedidoService.GetAllAsync());
 
-        [HttpPost("lista-de-compras")]
+        [HttpPost("list-purchases")]
 		[ValidarModelState(typeof(PedidoViewModel))]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-		public async Task<IActionResult> ObterListaCompras(PedidoViewModel pedidoViewModel) => Ok(await _pedidoService.GetByIdAsync(pedido => pedido.PedidoId == pedidoViewModel.PedidoId));
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+		public async Task<IActionResult> ListPurchases(PedidoIdViewModel pedidoIdViewModel) =>
+            Ok(await _pedidoService.GetByIdAsync(pedido => pedido.PedidoId == pedidoIdViewModel.PedidoId));
 
 		// [GlobalExceptionHandler]
 		[ProducesResponseType(StatusCodes.Status201Created)]
-		[ProducesResponseType(StatusCodes.Status404NotFound)]
-		[HttpPost("processar-compras")]
-		public async Task<IActionResult> ProcessarCompras([FromBody] PedidoViewModel pedidoViewModel) => CreatedAtAction(
-				nameof(ProcessarCompras),
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+		[HttpPost("process-purchases")]
+		public async Task<IActionResult> ProcessPurchases([FromBody] PedidoViewModel pedidoViewModel) => CreatedAtAction(
+				nameof(ProcessPurchases),
 				new { id = pedidoViewModel.PedidoId },
 				await _pedidoService.ProcessarPedido(pedidoViewModel));
-
-		private async Task InserirOuAtualizarItens(PedidoViewModel pedidoViewModel, Pedido pedido)
-        {
-            foreach (var item in pedidoViewModel.PedidoItens)
-            {
-                var pedidoItem = (PedidoItem)item;
-
-                if (pedidoItem.PedidoId <= 0)
-                {
-                    pedidoItem.PedidoId = pedido.PedidoId;
-                    item.PedidoId = pedido.PedidoId;
-                }
-
-                if (pedidoItem.PedidoItemId > 0)
-                { 
-                    _pedidoItemService.Update(pedidoItem);
-                }
-                else 
-                { 
-                    await _pedidoItemService.AddAsync(pedidoItem);
-                }
-
-                await _pedidoItemService.SaveAsync();
-                if (item.PedidoItemId <= 0)
-                { 
-                    item.PedidoItemId = pedidoItem.PedidoItemId; 
-                }
-            }
-        }
     }
 }
 

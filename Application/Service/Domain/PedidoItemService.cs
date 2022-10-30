@@ -1,6 +1,6 @@
 ﻿using Application.Interfaces.Domain;
 using Application.Service.Standard;
-using Application.ViewModels;
+using Domain.ViewModels;
 using Domain.Entidades;
 using Infrastructure.Interfaces.Domain;
 using System;
@@ -22,8 +22,7 @@ namespace Application.Service.Domain
         }
         public async Task<IEnumerable<PedidoItem>> GetAllIncludingAsync(
             Expression<Func<PedidoItem, bool>> filter = null, 
-            Func<IQueryable<PedidoItem>, IOrderedQueryable<PedidoItem>> orderBy = null, 
-            params string[] includeProperties)
+            Func<IQueryable<PedidoItem>, IOrderedQueryable<PedidoItem>> orderBy = null)
         {
             return await _repository.GetAllIncludingAsync(
                 filter, 
@@ -35,7 +34,7 @@ namespace Application.Service.Domain
         }
 
         public async Task<PedidoItem> GetByIdIncludingAsync(
-            Expression<Func<PedidoItem, bool>> filter, params string[] includeProperties)
+            Expression<Func<PedidoItem, bool>> filter)
         {
             return await _repository.GetByIdIncludingAsync(
                 filter, 
@@ -45,23 +44,23 @@ namespace Application.Service.Domain
                     nameof(PedidoItem.TabelaPreco) });
         }
 
-        public async Task<List<PedidoItemViewModel>> ProcessarPedidoItens(List<PedidoItemViewModel> pedidoItensViewModel)
+        private async Task<bool> AddOrUpdateAsync(PedidoItem pedidoItem)
         {
-            var newPedidoItemViewModel = new List<PedidoItemViewModel>();
-            
+            if (pedidoItem.PedidoItemId > 0)
+            {
+                return await UpdateAsync(pedidoItem);
+            }
+
+            return await AddAsync(pedidoItem);
+        }
+
+        public async Task<List<PedidoItemViewModel>> ProcessarPedidoItens(List<PedidoItemViewModel> pedidoItensViewModel)
+        {   
 			foreach (var pedidoItemViewModel in pedidoItensViewModel)
 			{
                 var pedidoItem = (PedidoItem)pedidoItemViewModel;
-                if (pedidoItem.PedidoItemId > 0)
-                {
-					_repository.Update(pedidoItem);                    
-                }
-                else
-                {
-                    await _repository.AddAsync(pedidoItem);
-                }
+                await AddOrUpdateAsync(pedidoItem);
 
-                await _repository.SaveAsync();
                 pedidoItemViewModel.PedidoItemId = pedidoItem.PedidoItemId;
             }
 

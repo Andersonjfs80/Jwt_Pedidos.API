@@ -1,5 +1,5 @@
-﻿using Application.Common;
-using Application.ValidationAttributes;
+﻿using Domain.ViewModels.CustomExceptions;
+using Domain.ValidationAttributes;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using System;
@@ -47,13 +47,13 @@ namespace Jwt_Pedidos_v1.API.Middlewares
 
 			switch (exception)
 			{
-				case ErroMensagemException ex:
+				case ErrorMessageException ex:
 					
 					context.Response.StatusCode = (int)ex.StatusCode;
 					await context.Response.WriteAsync(ex.Mensagem);
 
 					break;
-				case NaoEncontradoException ex:
+				case NotFoundException ex:
 
 					context.Response.StatusCode = (int)ex.StatusCode;
 					await context.Response.WriteAsync(ex.Mensagem);

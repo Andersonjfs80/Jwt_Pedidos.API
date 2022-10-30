@@ -5,9 +5,9 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.Common
+namespace Domain.ViewModels.CustomExceptions
 {
-	public class ErroMensagemException : Exception
+	public class ErrorMessageException : Exception
 	{
 		public HttpStatusCode StatusCode { get; set; }
 

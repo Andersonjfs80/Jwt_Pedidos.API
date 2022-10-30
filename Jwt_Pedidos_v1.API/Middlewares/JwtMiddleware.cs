@@ -21,10 +21,9 @@ namespace Jwt_Pedidos_v1.API.Middlewares
 
         private static void UseJwtMiddleware(IServiceCollection services, IConfiguration configuration)
         {
-            var tokenConfiguration =
-              configuration.GetSection("JwtTokenConfiguration").Get<JwtTokenConfiguration>();
-
-            services.AddSingleton<JwtTokenConfiguration>(tokenConfiguration);
+            var tokenConfiguration = configuration.GetSection("JwtTokenConfiguration").Get<JwtTokenConfiguration>();
+            
+            services.AddSingleton(tokenConfiguration);
         }
 
         private static void UseJwtAuthenticationMiddlerware(IServiceCollection services, IConfiguration configuration)

@@ -27,30 +27,28 @@ namespace Jwt_Pedidos_v1.API.Controllers
 
         [HttpGet]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public ActionResult<IEnumerable<PedidoItem>> GetAllByPedidoId(int pedidoId)
+        public async Task<IActionResult> GetAllByPedidoId(int pedidoId)
         {
-            var pedidoItens = _pedidoItemService.GetAllIncludingAsync(p => p.PedidoId == pedidoId);
-
-            return Ok(JsonSerializer.Serialize(pedidoItens));
+            return Ok(await _pedidoItemService.GetAllIncludingAsync(p => p.PedidoId == pedidoId));
         }
 
         [HttpGet("{id}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public ActionResult<PedidoItem> GetById(int id)
+        public async Task<IActionResult> GetById(int id)
         {
-            var pedido = _pedidoItemService.GetByIdAsync(p => p.PedidoItemId == id).Result;
+            var pedido = await _pedidoItemService.GetByIdAsync(p => p.PedidoItemId == id);
 
             if (pedido is null)
                 return NotFound();
 
-            return Ok(JsonSerializer.Serialize(pedido));
+            return Ok(pedido);
         }
 
         [HttpPost]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public IActionResult Create(PedidoItem pedidoItem)
-        {
-            if (_pedidoItemService.AddAsync(pedidoItem).Result == false)
+        public async Task<IActionResult> Create(PedidoItem pedidoItem)
+        {            
+            if (!await _pedidoItemService.AddAsync(pedidoItem) == false)
                 return NotFound();
 
             return CreatedAtAction(nameof(Create), pedidoItem);
@@ -58,7 +56,7 @@ namespace Jwt_Pedidos_v1.API.Controllers
 
         [HttpPut("{id}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public IActionResult Update(int id, PedidoItem pedidoItem)
+        public async Task<IActionResult> Update(int id, PedidoItem pedidoItem)
         {
             if (id <= 0)
                 return NotFound();
@@ -68,8 +66,8 @@ namespace Jwt_Pedidos_v1.API.Controllers
 
             if (pedidoItem.PedidoId != id)
                 return NotFound();
-
-            if (_pedidoItemService.Update(pedidoItem).Result == false)
+                        
+            if (!await _pedidoItemService.UpdateAsync(pedidoItem) == false)
                 return NotFound();
 
             return NoContent();
@@ -77,14 +75,14 @@ namespace Jwt_Pedidos_v1.API.Controllers
 
         [HttpDelete("{id}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var existingPedidoItem = _pedidoItemService.GetByIdAsync(p => p.PedidoItemId == id).Result;
+            var existingPedidoItem = await _pedidoItemService.GetByIdAsync(p => p.PedidoItemId == id);
 
             if (existingPedidoItem is null)
                 return NotFound();
-
-            if (_pedidoItemService.Delete(existingPedidoItem).Result == false)
+                        
+            if (!await _pedidoItemService.DeleteAsync(existingPedidoItem) == false)
                 return NotFound();
 
             return NoContent();

@@ -23,10 +23,10 @@ namespace Jwt_Pedidos_v1.API.Middlewares
 
 		public async Task InvokeAsync(HttpContext context)
 		{
-			var model = ObterModelView(context);
+			var model = GetModelView(context);
 			if (model != null)
 			{
-				var validationResult = ValidationErros(model);
+				var validationResult = ValidationErrors(model);
 				if (validationResult != null)
 				{
 					context.Response.ContentType = "application/text";
@@ -40,7 +40,7 @@ namespace Jwt_Pedidos_v1.API.Middlewares
 			await _next(context);
 		}
 
-		private async Task<object> ObterModelView(HttpContext context)
+		private async Task<object> GetModelView(HttpContext context)
 		{
 			var attribute = context.Request.HttpContext.GetEndpoint().Metadata.GetMetadata<ValidarModelStateAttribute>();
 
@@ -54,7 +54,7 @@ namespace Jwt_Pedidos_v1.API.Middlewares
 			return json;	
 		}
 
-		public IEnumerable<ValidationResult> ValidationErros(object obj)
+		public IEnumerable<ValidationResult> ValidationErrors(object obj)
 		{
 			var contexto = new ValidationContext(obj, null, null);
 			var resultadoValidacao = new List<ValidationResult>();			

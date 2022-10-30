@@ -1,5 +1,5 @@
 ﻿using Application.Interfaces.Standard;
-using Application.ViewModels;
+using Domain.ViewModels;
 using Domain.Entidades;
 using System;
 using System.Linq.Expressions;

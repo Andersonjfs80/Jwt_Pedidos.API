@@ -27,40 +27,23 @@ namespace Jwt_Pedidos_v1.API.Controllers
 
         [HttpGet]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public ActionResult<IEnumerable<ProdutoPreco>> GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            var produtosCategorias = _produtoPrecoService.GetAllAsync();
-
-            return Ok(JsonSerializer.Serialize(produtosCategorias, new JsonSerializerOptions()
-            {
-                MaxDepth = 0,
-                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-                IgnoreReadOnlyProperties = true
-            }));
+            return Ok(await _produtoPrecoService.GetAllAsync());
         }
 
         [HttpGet("{id}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public ActionResult<ProdutoPreco> Get(int id)
+        public async Task<IActionResult> Get(int id)
         {
-            var produtoPreco = _produtoPrecoService.GetByIdAsync(pc => pc.ProdutoPrecoId == id).Result;
-
-            if (produtoPreco is null)
-                return NotFound();
-
-            return Ok(JsonSerializer.Serialize(produtoPreco, new JsonSerializerOptions()
-            {
-                MaxDepth = 0,
-                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-                IgnoreReadOnlyProperties = true
-            }));
+            return Ok(await _produtoPrecoService.GetByIdAsync(pc => pc.ProdutoPrecoId == id));
         }
 
         [HttpPost]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public IActionResult Create(ProdutoPreco produtoPreco)
-        {
-            if (_produtoPrecoService.AddAsync(produtoPreco).Result == false)
+        public async Task<IActionResult> Create(ProdutoPreco produtoPreco)
+        {           
+            if (await _produtoPrecoService.AddAsync(produtoPreco) == false)
                 return NotFound();
 
             return CreatedAtAction(nameof(Create), produtoPreco);
@@ -68,7 +51,7 @@ namespace Jwt_Pedidos_v1.API.Controllers
 
         [HttpPut("{id}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public IActionResult Update(int id, ProdutoPreco produtoPreco)
+        public async Task<IActionResult> Update(int id, ProdutoPreco produtoPreco)
         {
             if (id <= 0)
                 return NotFound();
@@ -78,8 +61,8 @@ namespace Jwt_Pedidos_v1.API.Controllers
 
             if (produtoPreco.ProdutoPrecoId != id)
                 return NotFound();
-
-            if (_produtoPrecoService.Update(produtoPreco).Result == false)
+                        
+            if (!await _produtoPrecoService.UpdateAsync(produtoPreco) == false)
                 return NotFound();
 
             return NoContent();
@@ -87,14 +70,14 @@ namespace Jwt_Pedidos_v1.API.Controllers
 
         [HttpDelete("{id}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var existingProdutoPreco = _produtoPrecoService.GetByIdAsync(pc => pc.ProdutoPrecoId == id).Result;
+            var existingProdutoPreco = await _produtoPrecoService.GetByIdAsync(pc => pc.ProdutoPrecoId == id);
 
             if (existingProdutoPreco is null)
                 return NotFound();
-
-            if (_produtoPrecoService.Delete(existingProdutoPreco).Result == false)
+                        
+            if (await _produtoPrecoService.DeleteAsync(existingProdutoPreco) == false)
                 return NotFound();
 
             return NoContent();

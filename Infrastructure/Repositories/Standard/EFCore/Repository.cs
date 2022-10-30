@@ -37,6 +37,12 @@ namespace Infrastructure.Repositories.Standard.EFCore
             await dbSet.AddAsync(entity);           
         }
 
+        public async Task AddAsync(IEnumerable<TEntity> entity)
+        {
+            dbSet.AttachRange(entity);
+            await dbSet.AddRangeAsync(entity);
+        }
+
         public void Update(TEntity entity)
         {
             dbSet.Attach(entity).State = EntityState.Modified;

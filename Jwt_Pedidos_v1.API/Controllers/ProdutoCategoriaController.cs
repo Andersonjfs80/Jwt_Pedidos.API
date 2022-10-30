@@ -25,39 +25,32 @@ namespace Jwt_Pedidos_v1.API.Controllers
             _produtoCategoriaService = produtoCategoriaService;            
         }
 
-        [HttpGet]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public ActionResult<IEnumerable<ProdutoCategoria>> GetAll()
-        {
-            var produtosCategorias = _produtoCategoriaService.GetAllAsync();
+		[HttpGet]
+		[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+		public async Task<IActionResult> GetAll() => Ok(await _produtoCategoriaService.GetAllAsync());
 
-            return Ok(JsonSerializer.Serialize(produtosCategorias));
-        }
+		[HttpGet("{id}")]
+		[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+		public async Task<IActionResult> Get(int id) => Ok(await _produtoCategoriaService.GetByIdAsync(pc => pc.ProdutoCategoriaId == id));
+        //var produtoCategoria = _produtoCategoriaService.GetByIdAsync(pc => pc.ProdutoCategoriaId == id).Result;
 
-        [HttpGet("{id}")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public ActionResult<ProdutoCategoria> Get(int id)
-        {
-            var produtoCategoria = _produtoCategoriaService.GetByIdAsync(pc => pc.ProdutoCategoriaId == id).Result;
+        //if (produtoCategoria is null)
+        //    return NotFound();
 
-            if (produtoCategoria is null)
-                return NotFound();
+        //JsonSerializerOptions options = new()
+        //{
+        //    IgnoreReadOnlyProperties = true,
+        //    WriteIndented = true,
+        //    DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault
+        //};
 
-            JsonSerializerOptions options = new()
-            {
-                IgnoreReadOnlyProperties = true,
-                WriteIndented = true,
-                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault
-            };
 
-            return Ok(JsonSerializer.Serialize(produtoCategoria, options));
-        }
 
         [HttpPost]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public IActionResult Create(ProdutoCategoria produtoCategoria)
-        {
-            if (_produtoCategoriaService.AddAsync(produtoCategoria).Result == false)
+        public async Task<IActionResult> Create(ProdutoCategoria produtoCategoria)
+        {           
+            if (!await _produtoCategoriaService.AddAsync(produtoCategoria) == false)
                 return NotFound();
 
             return CreatedAtAction(nameof(Create), produtoCategoria);
@@ -65,7 +58,7 @@ namespace Jwt_Pedidos_v1.API.Controllers
 
         [HttpPut("{id}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public IActionResult Update(int id, ProdutoCategoria produtoCategoria)
+        public async Task<IActionResult> Update(int id, ProdutoCategoria produtoCategoria)
         {
             if (id <= 0)
                 return NotFound();
@@ -75,8 +68,8 @@ namespace Jwt_Pedidos_v1.API.Controllers
 
             if (produtoCategoria.ProdutoCategoriaId != id)
                 return NotFound();
-
-            if (_produtoCategoriaService.Update(produtoCategoria).Result == false)
+                        
+            if (!await _produtoCategoriaService.UpdateAsync(produtoCategoria) == false)
                 return NotFound();
 
             return NoContent();
@@ -84,14 +77,14 @@ namespace Jwt_Pedidos_v1.API.Controllers
 
         [HttpDelete("{id}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             var existingProdutoCategoria = _produtoCategoriaService.GetByIdAsync(pc => pc.ProdutoCategoriaId == id).Result;
 
             if (existingProdutoCategoria is null)
                 return NotFound();
-
-            if (_produtoCategoriaService.Delete(existingProdutoCategoria).Result == false)
+                                    
+            if (!await _produtoCategoriaService.DeleteAsync(existingProdutoCategoria) == false)
                 return NotFound();
 
             return NoContent();

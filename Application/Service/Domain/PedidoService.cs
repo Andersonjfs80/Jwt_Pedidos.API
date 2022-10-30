@@ -1,7 +1,7 @@
-﻿using Application.Common;
+﻿using Domain.ViewModels.CustomExceptions;
 using Application.Interfaces.Domain;
 using Application.Service.Standard;
-using Application.ViewModels;
+using Domain.ViewModels;
 using Domain.Entidades;
 using Infrastructure.Interfaces.Domain;
 using Microsoft.EntityFrameworkCore;
@@ -21,12 +21,22 @@ namespace Application.Service.Domain
 		{
 			_pedidoItemService = pedidoItemService;
 		}
-		
+
+		private async Task<bool> AddOrUpdateAsync(Pedido pedido) 
+		{
+			if (pedido.PedidoId > 0)
+			{
+				return await UpdateAsync(pedido);
+			}
+
+			return await AddAsync(pedido);
+		}
+
 		public async Task<PedidoViewModel> ProcessarPedido(PedidoViewModel pedidoViewModel)
         {
             if (pedidoViewModel == null) 
             {
-				throw new NaoEncontradoException
+				throw new NotFoundException
 				{
 					StatusCode = HttpStatusCode.NotFound,
 					Mensagem = JsonSerializer.Serialize(
@@ -41,16 +51,7 @@ namespace Application.Service.Domain
 			var pedido = (Pedido)pedidoViewModel;
 			
 			await StartTransactionAsync();
-			if (pedido.PedidoId > 0)
-			{
-				Update(pedido);
-			}
-			else
-			{
-				await AddAsync(pedido);
-			}
-
-			await SaveAsync();
+			await AddOrUpdateAsync(pedido);
 
 			pedidoViewModel.PedidoId = pedido.PedidoId;
 			pedidoViewModel.PedidoItens.ForEach(itens => itens.PedidoId = pedido.PedidoId);
@@ -60,14 +61,7 @@ namespace Application.Service.Domain
 				await _pedidoItemService.ProcessarPedidoItens(pedidoViewModel.PedidoItens);
 			}
 
-			try
-			{
-				await CommitAsync();			
-			}
-			catch (Exception)
-			{
-				await RollbackAsync();			
-			}
+			await CommitAsync();
 
 			pedidoViewModel.ValorTotal = pedidoViewModel.PedidoItens.Sum(tot => tot.ValorTotal);
 			return pedidoViewModel;

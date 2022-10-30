@@ -17,32 +17,41 @@ namespace Application.Service.Standard
             _repository = repository;
         }
 
-		public async Task AddAsync(TEntity obj)
+		public async Task<bool> AddAsync(TEntity obj)
 		{
 			await _repository.AddAsync(obj);
-		}
+            return await _repository.SaveAsync();
+        }
 
-		public void Update(TEntity obj)
+        public async Task<bool> AddAsync(IEnumerable<TEntity> obj)
+        {
+            await _repository.AddAsync(obj);
+            return await _repository.SaveAsync();
+        }
+
+        public async Task<bool> UpdateAsync(TEntity obj)
         {
             _repository.Update(obj);
+            return await _repository.SaveAsync();
         }
 
-        public void Update(IEnumerable<TEntity> obj)
+        public async Task<bool> UpdateAsync(IEnumerable<TEntity> obj)
         {
-            _repository.Update(obj);           
+            _repository.Update(obj);
+            return await _repository.SaveAsync();
         }
 
-        public void Delete(TEntity obj)
-        {
-            _repository.Delete(obj);
-        }
-
-        public void Delete(IEnumerable<TEntity> obj)
+        public async Task<bool> DeleteAsync(TEntity obj)
         {
             _repository.Delete(obj);
+            return await _repository.SaveAsync();
         }
 
-        public virtual async Task<bool> SaveAsync() => await _repository.SaveAsync();
+        public async Task<bool> DeleteAsync(IEnumerable<TEntity> obj)
+        {
+            _repository.Delete(obj);
+            return await _repository.SaveAsync();
+        }      
 
         public virtual async Task<IEnumerable<TEntity>> GetAllAsync() => await _repository.GetAllAsync();
 
@@ -54,13 +63,16 @@ namespace Application.Service.Standard
 		}
 
 		public async Task CommitAsync()
-		{
-            await _repository.CommitAsync();
-        }
-
-		public async Task RollbackAsync()
-		{
-            await _repository.RollbackAsync();
+		{         
+            try
+            {
+                await _repository.CommitAsync();
+            }
+            catch (Exception ex)
+            {
+                await _repository.RollbackAsync();
+                throw new Exception($"Erro ao executar transação {ex}");          
+            }
         }
 	}
 }

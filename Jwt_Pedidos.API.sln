@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30804.86
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32630.192
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application", "Application\Application.csproj", "{43421AB8-BEC3-48C9-9DFA-52EB2923542A}"
 EndProject
@@ -15,7 +15,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JWT_Pedidos_Test", "JWT_Ped
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "xJWT_Pedidos_v1.API", "xJWT_Pedidos_v1.API\xJWT_Pedidos_v1.API.csproj", "{2CD743B0-7ABB-4680-8806-B31425DAB667}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jwt_Lista_Compras", "Jwt_Lista_Compras\Jwt_Lista_Compras.csproj", "{11E53421-3A7F-4E05-A241-D3BE217F2258}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jwt_Lista_Compras", "Jwt_Lista_Compras\Jwt_Lista_Compras.csproj", "{11E53421-3A7F-4E05-A241-D3BE217F2258}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{D219582F-1D35-47DC-928C-8A777C9C9365}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{11E53421-3A7F-4E05-A241-D3BE217F2258}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{11E53421-3A7F-4E05-A241-D3BE217F2258}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{11E53421-3A7F-4E05-A241-D3BE217F2258}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D219582F-1D35-47DC-928C-8A777C9C9365}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D219582F-1D35-47DC-928C-8A777C9C9365}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D219582F-1D35-47DC-928C-8A777C9C9365}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D219582F-1D35-47DC-928C-8A777C9C9365}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

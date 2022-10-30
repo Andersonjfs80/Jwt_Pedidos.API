@@ -1,10 +1,10 @@
-﻿using Application.ValidationAttributes;
+﻿using Domain.ValidationAttributes;
 using Domain.Entidades;
 using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace Application.ViewModels
+namespace Domain.ViewModels
 {
 	public class PedidoViewModel
     {        

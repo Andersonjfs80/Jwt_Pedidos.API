@@ -12,6 +12,7 @@ namespace Infrastructure.Interfaces.Standard
         Task<IEnumerable<TEntity>> GetAllAsync();
         Task<TEntity> GetByIdAsync(Expression<Func<TEntity, bool>> filter);
         Task AddAsync(TEntity entity);
+        Task AddAsync(IEnumerable<TEntity> entity);
         void Update(TEntity entity);
         void Update(IEnumerable<TEntity> entity);
         void Delete(TEntity entity);

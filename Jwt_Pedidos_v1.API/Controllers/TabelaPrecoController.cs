@@ -29,40 +29,23 @@ namespace Jwt_Pedidos_v1.API.Controllers
 
         [HttpGet]        
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public ActionResult<IEnumerable<TabelaPreco>> GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            var tabelaPrecos = _tabelaPrecoService.GetAllAsync();
-            
-            return Ok(JsonSerializer.Serialize(tabelaPrecos, new JsonSerializerOptions()
-            {
-                MaxDepth = 0,
-                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-                IgnoreReadOnlyProperties = true
-            }));
+            return Ok(await _tabelaPrecoService.GetAllAsync());
         }
 
         [HttpGet("{id}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public ActionResult<TabelaPreco> Get(int id)
+        public async Task<IActionResult> Get(int id)
         {
-            var tabelaPreco = _tabelaPrecoService.GetByIdAsync(tp => tp.TabelaPrecoId == id).Result;
-
-            if (tabelaPreco is null)
-                return NotFound();
-            
-            return Ok(JsonSerializer.Serialize(tabelaPreco, new JsonSerializerOptions()
-            {
-                MaxDepth = 0,
-                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-                IgnoreReadOnlyProperties = true
-            }));
+            return Ok(await _tabelaPrecoService.GetByIdAsync(tp => tp.TabelaPrecoId == id));
         }
 
         [HttpPost]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public IActionResult Create(TabelaPreco tabelaPreco)
+        public async Task<IActionResult> Create(TabelaPreco tabelaPreco)
         {
-            if (_tabelaPrecoService.AddAsync(tabelaPreco).Result == false)
+            if (!await _tabelaPrecoService.AddAsync(tabelaPreco) == false)
                 return NotFound();
 
             return CreatedAtAction(nameof(Create), tabelaPreco);
@@ -70,7 +53,7 @@ namespace Jwt_Pedidos_v1.API.Controllers
  
         [HttpPut("{id}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public IActionResult Update(int id, TabelaPreco tabelaPreco)
+        public async Task<IActionResult> Update(int id, TabelaPreco tabelaPreco)
         {
             if (id <= 0)
                 return NotFound();
@@ -80,8 +63,8 @@ namespace Jwt_Pedidos_v1.API.Controllers
 
             if (tabelaPreco.TabelaPrecoId != id)
                 return NotFound();
-
-            if (_tabelaPrecoService.Update(tabelaPreco).Result == false)
+                        
+            if (!await _tabelaPrecoService.UpdateAsync(tabelaPreco)  == false)
                 return NotFound();
 
             return NoContent();
@@ -89,14 +72,14 @@ namespace Jwt_Pedidos_v1.API.Controllers
 
         [HttpDelete("{id}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var existingTabelaPreco = _tabelaPrecoService.GetByIdAsync(tp => tp.TabelaPrecoId == id).Result;
+            var existingTabelaPreco = await _tabelaPrecoService.GetByIdAsync(tp => tp.TabelaPrecoId == id);
 
             if (existingTabelaPreco is null)
                 return NotFound();
-
-            if (_tabelaPrecoService.Delete(existingTabelaPreco).Result == false)
+                        
+            if (!await _tabelaPrecoService.DeleteAsync(existingTabelaPreco) == false)
                 return NotFound();
 
             return NoContent();

@@ -27,40 +27,23 @@ namespace Jwt_Pedidos_v1.API.Controllers
 
         [HttpGet]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public ActionResult<IEnumerable<Produto>> GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            var produtos = _produtoService.GetAllAsync();
-
-            return Ok(JsonSerializer.Serialize(produtos, new JsonSerializerOptions()
-            {
-                MaxDepth = 0,
-                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-                IgnoreReadOnlyProperties = true
-            }));
+            return Ok(await _produtoService.GetAllAsync());
         }
 
         [HttpGet("{id}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public ActionResult<Produto> Get(int id)
+        public async Task<IActionResult> Get(int id)
         {
-            var produto = _produtoService.GetByIdAsync(p => p.ProdutoId == id).Result;
-
-            if (produto is null)
-                return NotFound();
-
-            return Ok(JsonSerializer.Serialize(produto, new JsonSerializerOptions()
-            {
-                MaxDepth = 0,
-                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-                IgnoreReadOnlyProperties = true
-            }));
+            return Ok(await _produtoService.GetByIdAsync(p => p.ProdutoId == id));
         }
 
         [HttpPost]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public IActionResult Create(Produto produto)
-        {
-            if (_produtoService.AddAsync(produto).Result == false)
+        public async Task<IActionResult> Create(Produto produto)
+        {            
+            if (!await _produtoService.AddAsync(produto) == false)
                 return NotFound();
 
             return CreatedAtAction(nameof(Create), produto);
@@ -68,7 +51,7 @@ namespace Jwt_Pedidos_v1.API.Controllers
 
         [HttpPut("{id}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public IActionResult Update(int id, Produto produto)
+        public async Task<IActionResult> Update(int id, Produto produto)
         {
             if (id <= 0)
                 return NotFound();
@@ -78,8 +61,8 @@ namespace Jwt_Pedidos_v1.API.Controllers
 
             if (produto.ProdutoId != id)
                 return NotFound();
-
-            if (_produtoService.Update(produto).Result == false)
+                        
+            if (!await _produtoService.UpdateAsync(produto) == false)
                 return NotFound();
 
             return NoContent();
@@ -87,14 +70,14 @@ namespace Jwt_Pedidos_v1.API.Controllers
 
         [HttpDelete("{id}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var existingProduto = _produtoService.GetByIdAsync(p => p.ProdutoId == id).Result;
+            var existingProduto = await _produtoService.GetByIdAsync(p => p.ProdutoId == id);
 
             if (existingProduto is null)
                 return NotFound();
-
-            if (_produtoService.Delete(existingProduto).Result == false)
+                        
+            if (!await _produtoService.DeleteAsync(existingProduto) == false)
                 return NotFound();
 
             return NoContent();

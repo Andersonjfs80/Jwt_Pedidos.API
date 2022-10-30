@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Application.ViewModels
+namespace Domain.ViewModels
 {
 	public class PedidoItemUnidadeViewModel
     {

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Application.ValidationAttributes
+namespace Domain.ValidationAttributes
 {
 	public class ValidarCPFCNPJ: ValidationAttribute
 	{

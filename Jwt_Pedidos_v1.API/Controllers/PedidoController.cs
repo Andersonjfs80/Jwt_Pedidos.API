@@ -27,43 +27,23 @@ namespace Jwt_Pedidos_v1.API.Controllers
 
         [HttpGet]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public ActionResult<IEnumerable<Pedido>> GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            var pedidos = _pedidoService.GetAllAsync();
-
-            return Ok(JsonSerializer.Serialize(pedidos, new JsonSerializerOptions()
-            {
-                MaxDepth = 0,
-                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-                IgnoreReadOnlyProperties = true
-            }));
+            return Ok(await _pedidoService.GetAllAsync());
         }
 
         [HttpGet("{id}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public ActionResult<Pedido> Get(int id)
+        public async Task<IActionResult> Get(int id)
         {
-            var pedido = _pedidoService.GetByIdAsync(p => p.PedidoId == id).Result;
-
-            if (pedido is null)
-            {
-                return NotFound();
-            }
-
-            return Ok(JsonSerializer.Serialize(pedido, new JsonSerializerOptions()
-            {
-                MaxDepth = 0,
-                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-                IgnoreReadOnlyProperties = true
-            }));
+            return Ok(await _pedidoService.GetByIdAsync(p => p.PedidoId == id));
         }
 
         [HttpPost]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Create(Pedido pedido)
-        {
-            await _pedidoService.AddAsync(pedido);
-            if (!await _pedidoService.SaveAsync())
+        {            
+            if (!await _pedidoService.AddAsync(pedido))
 			{
                 return NotFound();
             }
@@ -83,9 +63,8 @@ namespace Jwt_Pedidos_v1.API.Controllers
 
             if (pedido.PedidoId != id)
                 return NotFound();
-
-            _pedidoService.Update(pedido);
-            if (!await _pedidoService.SaveAsync())
+                        
+            if (!await _pedidoService.UpdateAsync(pedido))
             {
                 return NotFound();
             }
@@ -101,9 +80,8 @@ namespace Jwt_Pedidos_v1.API.Controllers
 
             if (existingPedido is null)
                 return NotFound();
-
-            _pedidoService.Delete(existingPedido);
-            if (!await _pedidoService.SaveAsync())
+                        
+            if (!await _pedidoService.DeleteAsync(existingPedido))
             {
                 return NotFound();
             }

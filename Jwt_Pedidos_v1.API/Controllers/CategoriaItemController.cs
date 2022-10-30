@@ -33,16 +33,9 @@ namespace Jwt_Pedidos_v1.API.Controllers
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [ProducesResponseType(StatusCodes.Status200OK)]        
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]        
-        public ActionResult<IEnumerable<CategoriaItem>> GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            var categoriaItens = _categoriaItemService.GetAllAsync();
-
-            return Ok(JsonSerializer.Serialize(categoriaItens, new JsonSerializerOptions()
-            {
-                MaxDepth = 0,
-                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-                IgnoreReadOnlyProperties = true
-            }));
+            return Ok(await _categoriaItemService.GetAllAsync());
         }
 
         // GET api/<CategoriaItemController>/5
@@ -51,19 +44,9 @@ namespace Jwt_Pedidos_v1.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<CategoriaItem> Get(int id)
+        public async Task<IActionResult> Get(int id)
         {
-            var categoriaItem = _categoriaItemService.GetByIdAsync(c => c.CategoriaItemId == id).Result;
-
-            if (categoriaItem is null)
-                return NotFound();
-
-            return Ok(JsonSerializer.Serialize(categoriaItem, new JsonSerializerOptions()
-            {
-                MaxDepth = 0,
-                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-                IgnoreReadOnlyProperties = true
-            }));
+            return Ok(await _categoriaItemService.GetByIdAsync(c => c.CategoriaItemId == id));
         }
 
         // POST api/<CategoriaItemController>
@@ -72,9 +55,9 @@ namespace Jwt_Pedidos_v1.API.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult Create([FromBody] CategoriaItem categoriaItem)
-        {
-            if (_categoriaItemService.AddAsync(categoriaItem).Result == false)
+        public async Task<IActionResult> Create([FromBody] CategoriaItem categoriaItem)
+        {            
+            if (!await _categoriaItemService.AddAsync(categoriaItem) == false)
                 return NotFound();
 
             return CreatedAtAction(nameof(Create), categoriaItem);
@@ -86,7 +69,7 @@ namespace Jwt_Pedidos_v1.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult Update(int id, [FromBody] CategoriaItem categoriaItem)
+        public async Task<IActionResult> Update(int id, [FromBody] CategoriaItem categoriaItem)
         {
             if (id <= 0)
                 return NotFound();
@@ -96,8 +79,8 @@ namespace Jwt_Pedidos_v1.API.Controllers
 
             if (categoriaItem.CategoriaItemId != id)
                 return NotFound();
-
-            if (_categoriaItemService.Update(categoriaItem).Result == false)
+                        
+            if (!await _categoriaItemService.UpdateAsync(categoriaItem) == false)
                 return NotFound();
 
             return NoContent();
@@ -109,14 +92,14 @@ namespace Jwt_Pedidos_v1.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             var existingCategoriaItem = _categoriaItemService.GetByIdAsync(c => c.CategoriaItemId == id).Result;
 
             if (existingCategoriaItem is null)
                 return NotFound();
-
-            if (_categoriaItemService.Delete(existingCategoriaItem).Result == false)
+                        
+            if (!await _categoriaItemService.DeleteAsync(existingCategoriaItem) == false)
                 return NotFound();
 
             return NoContent();

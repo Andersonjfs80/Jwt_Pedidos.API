@@ -1,5 +1,5 @@
 ﻿using Application.Interfaces.Standard;
-using Application.ViewModels;
+using Domain.ViewModels;
 using Domain.Entidades;
 using System;
 using System.Collections.Generic;
@@ -14,11 +14,10 @@ namespace Application.Interfaces.Domain
     {
         Task<IEnumerable<PedidoItem>> GetAllIncludingAsync(       
             Expression<Func<PedidoItem, bool>> filter = null,       
-            Func<IQueryable<PedidoItem>, IOrderedQueryable<PedidoItem>> orderBy = null,       
-            params string[] includeProperties);
+            Func<IQueryable<PedidoItem>, IOrderedQueryable<PedidoItem>> orderBy = null);
 
         Task<PedidoItem> GetByIdIncludingAsync(
-            Expression<Func<PedidoItem, bool>> filter, params string[] includeProperties);
+            Expression<Func<PedidoItem, bool>> filter);
 
         Task<List<PedidoItemViewModel>> ProcessarPedidoItens(List<PedidoItemViewModel> pedidoItens);
     }

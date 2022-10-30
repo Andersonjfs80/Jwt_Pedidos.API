@@ -4,11 +4,15 @@
     <TargetFramework>net6.0</TargetFramework>
     <AssemblyName>Jwt_Pedidos_v1.API</AssemblyName>
     <RootNamespace>Jwt_Pedidos_v1.API</RootNamespace>
+    <UserSecretsId>63e05e9d-8abf-4c44-a6ba-4ed4c08b4c33</UserSecretsId>
+    <DockerDefaultTargetOS>Windows</DockerDefaultTargetOS>
+    <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />
     <PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="2.2.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.15.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.1" />
     <PackageReference Include="Swashbuckle.AspNetCore.Newtonsoft" Version="6.3.1" />
   </ItemGroup>
